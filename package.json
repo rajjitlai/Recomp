@@ -1,5 +1,5 @@
 {
-  "name": "form-workout",
+  "name": "recomp-workout",
   "version": "1.0.0",
   "private": true,
   "main": "expo-router/entry",
@@ -41,5 +41,6 @@
     "tailwindcss": "^3.4.17",
     "tsx": "^4.20.0",
     "typescript": "~5.9.2"
-  }
+  },
+  "license": "MIT"
 }

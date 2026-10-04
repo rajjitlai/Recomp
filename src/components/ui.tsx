@@ -95,7 +95,7 @@ export function Page({
                 color="#d4f77d"
               />
               <Text className="text-2xl font-black tracking-tight text-white">
-                {back ? (title ?? "Back") : "form"}
+                {back ? (title ?? "Back") : "recomp"}
                 {!back && <Text className="text-lime">.</Text>}
               </Text>
             </Pressable>

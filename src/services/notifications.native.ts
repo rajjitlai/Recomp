@@ -22,7 +22,7 @@ export async function setReminders(enabled: boolean): Promise<void> {
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "Time to show up.",
-          body: "Your workout is ready. Open Form and take the first rep.",
+          body: "Your workout is ready. Open Recomp and take the first rep.",
         },
         trigger: {
           type: Notifications.SchedulableTriggerInputTypes.WEEKLY,

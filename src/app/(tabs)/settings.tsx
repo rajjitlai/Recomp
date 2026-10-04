@@ -249,7 +249,7 @@ export default function Settings() {
         </View>
       </Panel>
       <Text className="mt-7 text-center text-xs leading-5 text-muted">
-        FORM / VERSION 1.0{"\n"}Offline by design. Your progress lives on this
+        RECOMP / VERSION 1.0{"\n"}Offline by design. Your progress lives on this
         device.
       </Text>
       <ConfirmDialog

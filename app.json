@@ -1,8 +1,8 @@
 {
   "expo": {
-    "name": "Form — Weekly Training",
-    "slug": "form-workout",
-    "scheme": "formworkout",
+    "name": "Recomp — Muscle & Fat Loss",
+    "slug": "recomp-workout",
+    "scheme": ["recomp", "formworkout"],
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
@@ -10,9 +10,14 @@
     "web": {
       "bundler": "metro",
       "output": "single",
-      "name": "Form — Weekly Training"
+      "name": "Recomp — Muscle & Fat Loss"
     },
-    "android": { "package": "com.form.workout" },
-    "ios": { "bundleIdentifier": "com.form.workout", "supportsTablet": true }
+    "android": {
+      "package": "com.form.workout"
+    },
+    "ios": {
+      "bundleIdentifier": "com.form.workout",
+      "supportsTablet": true
+    }
   }
 }

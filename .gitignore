@@ -7,3 +7,13 @@ web-build/
 expo-env.d.ts
 .npm-cache/
 test-results/
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.p8
+*.jks
+*.keystore
+credentials.json
