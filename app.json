@@ -31,6 +31,7 @@
     },
     "android": {
       "package": "com.rajjitlaishram.recomp",
+      "versionCode": 1,
       "adaptiveIcon": {
         "foregroundImage": "./assets/logo.png",
         "backgroundColor": "#10120F"

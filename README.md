@@ -14,7 +14,7 @@ Recomp is an MIT-licensed, open-source workout app that combines structured resi
 
 [Getting started](#getting-started) · [Training program](#training-program) · [Local images](#local-exercise-images) · [Development](#development-and-quality-checks) · [Troubleshooting](#troubleshooting)
 
-> **Project status:** Working local app. TypeScript checks, 11 automated tests, browser checks, and web/Android/iOS bundle exports have passed during development. Physical-device verification and store release setup remain pending. The badges above describe the project; they are not live CI results.
+> **Project status:** Working local app. TypeScript checks, 15 automated tests, Expo Doctor (21/21 checks), and web/Android bundle exports have passed during development. Physical-device verification remains pending. The badges above describe the project; they are not live CI results.
 
 ## Contents
 
@@ -119,11 +119,7 @@ git clone https://github.com/rajjitlai/Recomp.git recomp-workout
 cd recomp-workout
 ```
 
-The repository is public and MIT-licensed. Anyone can clone it without requesting access. If you already have the checkout, open a terminal in that directory instead. For the existing Windows workspace:
-
-```powershell
-Set-Location 'D:\Codes\Health'
-```
+The repository is public and MIT-licensed. Anyone can clone it without requesting access. If you already have the checkout, open a terminal in the repository root instead.
 
 ### 2. Install dependencies
 
@@ -479,7 +475,16 @@ These commands validate and export JavaScript/Hermes bundles and assets. They **
 
 ### Installable releases
 
-Use a configured native build pipeline or follow [Expo EAS Build setup](https://docs.expo.dev/build/setup/) to create signed application binaries. This repository does not yet include `eas.json`, signing credentials, store metadata, or store submission automation. Configure project ownership, build profiles, signing, app artwork, and device testing before release. This README does not imply the app is published in a store.
+This repository includes an EAS preview profile that creates an installable Android APK. From the project root, authenticate with Expo and build it with:
+
+```bash
+npx eas-cli login
+npx eas-cli build --platform android --profile preview
+```
+
+On the first build, EAS may ask you to link the project and create Android signing credentials. Download the completed APK from the build page or CLI link, install it on a physical Android device, and verify the release checklist above before publishing it as a GitHub Release. Increment `android.versionCode` in `app.json` for each subsequent APK release so Android can install updates over the previous version.
+
+The `production` profile keeps EAS's default Android App Bundle output for a future Google Play release. An APK is suitable for GitHub direct downloads and sideloading; Google Play distribution uses an AAB. Store listing, privacy information, and submission automation are not configured. This README does not imply the app is published in a store.
 
 ## Troubleshooting
 
@@ -501,12 +506,14 @@ Use a configured native build pipeline or follow [Expo EAS Build setup](https://
 | Reminder toggle is disabled                              | Reminders are unavailable on web and Android Expo Go; verify them in a native development or installed build |
 | Reminder text still says Form                            | Disable and enable reminders again to reschedule their content                                           |
 
-Windows launcher fallback, assuming Node is installed in its default location:
+If PowerShell cannot run the npm launcher, try the Windows command shim from the repository root:
 
 ```powershell
-node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' ci
-node 'C:\Program Files\nodejs\node_modules\npm\bin\npm-cli.js' run web
+npm.cmd ci
+npm.cmd run web
 ```
+
+If `npm.cmd` is not available, repair the Node.js installation or its PATH entry, then open a new terminal. Avoid copying machine-specific installation paths into project commands.
 
 For dependency mismatches, first inspect:
 
