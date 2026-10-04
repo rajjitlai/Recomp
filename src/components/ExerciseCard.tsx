@@ -13,6 +13,7 @@ export function ExerciseCard({
   toggle,
   timing,
   rounds,
+  disabled = false,
 }: {
   exercise: Exercise;
   index: number;
@@ -22,6 +23,7 @@ export function ExerciseCard({
   toggle: () => void;
   timing: number;
   rounds: number;
+  disabled?: boolean;
 }) {
   return (
     <View
@@ -61,7 +63,9 @@ export function ExerciseCard({
       </Pressable>
       <Pressable
         accessibilityRole="checkbox"
-        accessibilityState={{ checked: done }}
+        accessibilityState={{ checked: done, disabled }}
+        disabled={disabled}
+        style={{ opacity: disabled ? 0.4 : 1 }}
         accessibilityLabel={`Complete ${exercise.name}`}
         onPress={toggle}
         className="h-12 w-12 items-center justify-center"

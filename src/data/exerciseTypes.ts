@@ -68,12 +68,21 @@ export interface WeeklyPlan {
   blockWeek?: number;
   days: Record<WorkoutDay, DayPlan>;
 }
+export const skipReasons = [
+  "Holiday",
+  "Travel",
+  "Rest",
+  "Busy",
+  "Other",
+] as const;
+export type SkipReason = (typeof skipReasons)[number];
 export interface WorkoutHistory {
   weekNumber: number;
   date: string;
   day: WorkoutDay;
   exercises: string[];
   completedExercises: string[];
+  skipped?: { reason: SkipReason; date: string };
 }
 export interface Settings {
   workSeconds: number;

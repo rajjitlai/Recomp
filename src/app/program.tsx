@@ -71,6 +71,17 @@ export default function Program() {
           stress and reassess the deficit. Stop an exercise that causes pain.
         </Text>
       </Panel>
+      <SectionTitle title="Missed days and holidays" />
+      <Panel>
+        <Text className="text-base leading-7 text-muted">
+          Open the session and choose Skip workout, then a reason. Skipped days
+          stay in history without counting as completed. Your calendar schedule
+          and four-week block continue normally; missed workouts are not added
+          to the next day. Reopen a skipped session anytime to continue its
+          saved progress. For a holiday, mark each affected session. Turn
+          reminders off in Settings while away if needed.
+        </Text>
+      </Panel>
       <SectionTitle title="Why this setup?" />
       <Text className="mb-4 text-sm leading-6 text-muted">
         General adult guidance supports resistance training across major muscle

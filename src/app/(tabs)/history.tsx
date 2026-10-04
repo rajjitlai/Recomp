@@ -22,6 +22,7 @@ export default function History() {
   ].sort((a, b) => b - a);
   const finished = Object.values(data.history).filter(
     (entry) =>
+      !entry.skipped &&
       entry.completedExercises.length === entry.exercises.length &&
       entry.exercises.length > 0,
   ).length;
@@ -44,8 +45,12 @@ export default function History() {
               Your history.
             </Text>
             <Text className="mb-6 text-base text-muted">
-              {finished} completed {finished === 1 ? "session" : "sessions"}.
-              Every one counts.
+              {finished} completed {finished === 1 ? "session" : "sessions"}.{" "}
+              {
+                Object.values(data.history).filter((entry) => entry.skipped)
+                  .length
+              }{" "}
+              skipped.
             </Text>
             {Object.keys(data.history).length === 0 && (
               <Empty
@@ -75,7 +80,7 @@ export default function History() {
                     <Pressable
                       key={day}
                       accessibilityRole="button"
-                      accessibilityLabel={`View ${day} workout for ${weekLabel(targetWeek)}`}
+                      accessibilityLabel={`View ${day} workout for ${weekLabel(targetWeek)}${entry?.skipped ? `, skipped, ${entry.skipped.reason}` : ""}`}
                       onPress={() =>
                         router.push({
                           pathname: "/workout/[day]",
@@ -86,11 +91,13 @@ export default function History() {
                     >
                       <Feather
                         name={
-                          count === total
-                            ? "check-circle"
-                            : count > 0
-                              ? "clock"
-                              : "circle"
+                          entry?.skipped
+                            ? "minus-circle"
+                            : count === total
+                              ? "check-circle"
+                              : count > 0
+                                ? "clock"
+                                : "circle"
                         }
                         size={19}
                         color={count === total ? "#d4f77d" : "#8d9586"}
@@ -102,6 +109,11 @@ export default function History() {
                         <Text className="mt-1 text-sm font-bold text-white">
                           {workout.title}
                         </Text>
+                        {entry?.skipped && (
+                          <Text className="mt-1 text-xs text-muted">
+                            Skipped · {entry.skipped.reason}
+                          </Text>
+                        )}
                       </View>
                       <Text className="text-xs text-muted">
                         {count}/{total}

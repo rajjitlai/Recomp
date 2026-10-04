@@ -1,5 +1,10 @@
-import type { AppData, WorkoutDay, Settings } from "../data/exerciseTypes";
-import { workoutDays } from "../data/exerciseTypes";
+import type {
+  AppData,
+  WorkoutDay,
+  Settings,
+  SkipReason,
+} from "../data/exerciseTypes";
+import { workoutDays, skipReasons } from "../data/exerciseTypes";
 import { exerciseById } from "../data/exercises";
 import {
   generateWeeklyWorkout,
@@ -25,6 +30,14 @@ export type Action =
   | { type: "ensureWeek"; week: number }
   | { type: "toggle"; week: number; day: WorkoutDay; id: string; date: string }
   | { type: "resetWorkout"; week: number; day: WorkoutDay }
+  | {
+      type: "skipWorkout";
+      week: number;
+      day: WorkoutDay;
+      reason: SkipReason;
+      date: string;
+    }
+  | { type: "resumeWorkout"; week: number; day: WorkoutDay }
   | { type: "regenerate"; week: number }
   | { type: "newWeek" }
   | { type: "clearHistory" }
@@ -42,11 +55,41 @@ export function reduceData(data: AppData, action: Action): AppData {
             [action.week]: generateWeeklyWorkout(action.week),
           },
         };
+  if (action.type === "skipWorkout") {
+    const key = historyKey(action.week, action.day);
+    const plan = data.plans[action.week] ?? generateWeeklyWorkout(action.week);
+    const exercises = plan.days[action.day].exercises.map((e) => e.id);
+    const entry = data.history[key];
+    if (entry?.completedExercises.length === exercises.length) return data;
+    return {
+      ...data,
+      plans: { ...data.plans, [action.week]: plan },
+      history: {
+        ...data.history,
+        [key]: {
+          weekNumber: action.week,
+          day: action.day,
+          date: action.date,
+          exercises,
+          completedExercises: entry?.completedExercises ?? [],
+          skipped: { reason: action.reason, date: action.date },
+        },
+      },
+    };
+  }
+  if (action.type === "resumeWorkout") {
+    const key = historyKey(action.week, action.day);
+    const entry = data.history[key];
+    if (!entry?.skipped) return data;
+    const { skipped, ...resumed } = entry;
+    return { ...data, history: { ...data.history, [key]: resumed } };
+  }
   if (action.type === "toggle") {
     const plan = data.plans[action.week] ?? generateWeeklyWorkout(action.week);
     const ids = plan.days[action.day].exercises.map((e) => e.id);
     if (!ids.includes(action.id)) return data;
     const key = historyKey(action.week, action.day);
+    if (data.history[key]?.skipped) return data;
     const previous = data.history[key]?.completedExercises ?? [];
     const completed = previous.includes(action.id)
       ? previous.filter((id) => id !== action.id)
@@ -142,6 +185,15 @@ export function decodeData(
       throw new Error("Invalid saved workout");
     const ids = entry.exercises;
     if (
+      entry.skipped !== undefined &&
+      (!record(entry.skipped) ||
+        !skipReasons.includes(entry.skipped.reason as SkipReason) ||
+        typeof entry.skipped.date !== "string" ||
+        !Number.isFinite(Date.parse(entry.skipped.date)) ||
+        entry.completedExercises.length === ids.length)
+    )
+      throw new Error("Invalid saved skip");
+    if (
       entry.completedExercises.some((id) => !ids.includes(id)) ||
       new Set(entry.completedExercises).size !==
         entry.completedExercises.length ||
@@ -165,7 +217,8 @@ export function decodeData(
       const saved = data.plans[key];
       const started = Object.values(data.history).some(
         (entry) =>
-          entry.weekNumber === week && entry.completedExercises.length > 0,
+          entry.weekNumber === week &&
+          (entry.completedExercises.length > 0 || !!entry.skipped),
       );
       if (saved?.program && saved.program !== "recomposition-v1")
         throw new Error("Unknown workout program");

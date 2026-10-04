@@ -1,7 +1,7 @@
 import { Pressable, Text, View } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { router } from "expo-router";
-import type { DayPlan } from "../data/exerciseTypes";
+import type { DayPlan, WorkoutHistory } from "../data/exerciseTypes";
 import { ProgressBar } from "./ProgressBar";
 
 export function WorkoutCard({
@@ -9,17 +9,19 @@ export function WorkoutCard({
   week,
   done,
   today,
+  skipped,
 }: {
   workout: DayPlan;
   week: number;
   done: number;
   today: boolean;
+  skipped?: WorkoutHistory["skipped"];
 }) {
-  const complete = done === workout.exercises.length;
+  const complete = !skipped && done === workout.exercises.length;
   return (
     <Pressable
       accessibilityRole="button"
-      accessibilityLabel={`${workout.day}, ${workout.title}, ${done} of ${workout.exercises.length} completed`}
+      accessibilityLabel={`${workout.day}, ${workout.title}, ${skipped ? `Skipped, ${skipped.reason}, ` : ""}${done} of ${workout.exercises.length} completed`}
       onPress={() =>
         router.push({
           pathname: "/workout/[day]",
@@ -41,15 +43,23 @@ export function WorkoutCard({
       <View className="flex-1">
         <Text className="text-base font-bold text-white">{workout.title}</Text>
         <Text className="mb-2 mt-1 text-xs text-muted">
-          {complete
-            ? "Workout complete"
-            : `${done} / ${workout.exercises.length} completed`}
+          {skipped
+            ? `Skipped · ${skipped.reason}`
+            : complete
+              ? "Workout complete"
+              : `${done} / ${workout.exercises.length} completed`}
           {today ? " · Today" : ""}
         </Text>
         <ProgressBar value={done} total={workout.exercises.length} />
       </View>
       <Feather
-        name={complete ? "check-circle" : "arrow-up-right"}
+        name={
+          skipped
+            ? "minus-circle"
+            : complete
+              ? "check-circle"
+              : "arrow-up-right"
+        }
         size={20}
         color={complete ? "#d4f77d" : "#a3aa9c"}
       />

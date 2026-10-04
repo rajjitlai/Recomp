@@ -4,6 +4,8 @@ import { Page, Label, Panel, Empty } from "../../components/ui";
 import { ProgressBar } from "../../components/ProgressBar";
 import { ExerciseCard } from "../../components/ExerciseCard";
 import { DaySelector } from "../../components/DaySelector";
+import { SkipWorkoutControl } from "../../components/SkipWorkoutControl";
+import { historyKey } from "../../services/state";
 import { useWorkout } from "../../context/WorkoutContext";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
 import {
@@ -32,6 +34,7 @@ export default function Workout() {
   const plan = data.plans[week] ?? generateWeeklyWorkout(week);
   const workout = plan.days[day];
   const done = completed(day, week);
+  const skipped = data.history[historyKey(week, day)]?.skipped;
   return (
     <Page back title="Workout">
       <Label>{weekLabel(week)}</Label>
@@ -40,6 +43,7 @@ export default function Workout() {
       </Text>
       <Text className="mb-6 text-base text-muted">{workout.subtitle}</Text>
       <DaySelector selected={day} week={week} />
+      <SkipWorkoutControl key={`${week}:${day}`} week={week} day={day} />
       {workout.guidance && (
         <View className="mb-5">
           <Panel>
@@ -57,9 +61,11 @@ export default function Workout() {
       <Panel>
         <View className="mb-3 flex-row justify-between">
           <Text className="font-bold text-white">
-            {done.length === workout.exercises.length
-              ? "Session complete. Well done."
-              : "Your session"}
+            {skipped
+              ? "Progress before skipping"
+              : done.length === workout.exercises.length
+                ? "Session complete. Well done."
+                : "Your session"}
           </Text>
           <Text className="font-bold text-lime">
             {done.length} / {workout.exercises.length}
@@ -84,6 +90,7 @@ export default function Workout() {
             day={day}
             week={week}
             done={done.includes(exercise.id)}
+            disabled={!!skipped}
             timing={data.settings.workSeconds}
             rounds={workout.rounds}
             toggle={() =>

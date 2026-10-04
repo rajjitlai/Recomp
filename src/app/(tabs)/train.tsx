@@ -4,8 +4,9 @@ import { WorkoutCard } from "../../components/WorkoutCard";
 import { useWorkout } from "../../context/WorkoutContext";
 import { workoutDays } from "../../data/exerciseTypes";
 import { todayDay, weekLabel } from "../../services/workoutRotation";
+import { historyKey } from "../../services/state";
 export default function Train() {
-  const { plan, week, completed } = useWorkout();
+  const { data, plan, week, completed } = useWorkout();
   return (
     <Page>
       <Label>{weekLabel(week)}</Label>
@@ -21,6 +22,7 @@ export default function Train() {
           workout={plan.days[day]}
           week={week}
           done={completed(day).length}
+          skipped={data.history[historyKey(week, day)]?.skipped}
           today={todayDay() === day}
         />
       ))}

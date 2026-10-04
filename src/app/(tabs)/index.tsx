@@ -8,18 +8,25 @@ import { Button, Label, Page, Panel, SectionTitle } from "../../components/ui";
 import { WorkoutCard } from "../../components/WorkoutCard";
 import { ProgressBar } from "../../components/ProgressBar";
 
+import { historyKey } from "../../services/state";
 export default function Home() {
-  const { plan, week, completed } = useWorkout();
+  const { data, plan, week, completed } = useWorkout();
   const wide = useWindowDimensions().width >= 850;
   const today = todayDay();
   const workout = plan.days[today ?? "monday"];
   const completeDays = workoutDays.filter(
-    (day) => completed(day).length === plan.days[day].exercises.length,
+    (day) =>
+      !data.history[historyKey(week, day)]?.skipped &&
+      completed(day).length === plan.days[day].exercises.length,
   ).length;
   const completeExercises = workoutDays.reduce(
     (sum, day) => sum + completed(day).length,
     0,
   );
+  const skippedDays = workoutDays.filter(
+    (day) => data.history[historyKey(week, day)]?.skipped,
+  ).length;
+  const todaySkipped = today && data.history[historyKey(week, today)]?.skipped;
   const hour = new Date().getHours();
   const greeting =
     hour < 12 ? "GOOD MORNING" : hour < 17 ? "GOOD AFTERNOON" : "GOOD EVENING";
@@ -49,7 +56,9 @@ export default function Home() {
             </Text>
             <Text className="mb-8 text-base leading-6 text-[#c2ceb3]">
               {today
-                ? workout.subtitle
+                ? todaySkipped
+                  ? `Skipped · ${todaySkipped.reason}`
+                  : workout.subtitle
                 : `Recharge today. Your ${plan.days.monday.title} session is ready when you are.`}
             </Text>
             <View className="mb-7 flex-row gap-8 border-t border-[#495b35] pt-5">
@@ -77,9 +86,11 @@ export default function Home() {
             <Button
               label={
                 today
-                  ? completed(today).length
-                    ? "Continue workout"
-                    : "Start workout"
+                  ? todaySkipped
+                    ? "View skipped workout"
+                    : completed(today).length
+                      ? "Continue workout"
+                      : "Start workout"
                   : "View Monday’s workout"
               }
               onPress={() =>
@@ -113,6 +124,10 @@ export default function Home() {
               <Feather name="trending-up" size={28} color="#d4f77d" />
             </View>
             <ProgressBar value={completeDays} total={6} />
+            <Text className="mt-3 text-sm text-muted">
+              {skippedDays} skipped · {6 - completeDays - skippedDays} sessions
+              remaining
+            </Text>
             <Text className="mt-4 text-sm text-muted">
               {completeExercises} of{" "}
               {workoutDays.reduce(
@@ -142,6 +157,7 @@ export default function Home() {
               workout={plan.days[day]}
               week={week}
               done={completed(day).length}
+              skipped={data.history[historyKey(week, day)]?.skipped}
               today={day === today}
             />
           ))}

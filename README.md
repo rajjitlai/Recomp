@@ -40,19 +40,19 @@ Recomp is an MIT-licensed, open-source workout app that combines structured resi
 
 ## Features
 
-| Area             | Included                                                                                  |
-| ---------------- | ----------------------------------------------------------------------------------------- |
-| Training plan    | Four upper/lower lifting sessions, two conditioning sessions, and Sunday rest             |
-| Progression      | Stable four-week exercise blocks, rep targets, rest periods, and reps-in-reserve guidance |
-| Recovery         | A lighter fourth week with fewer sets and no automatic load increase                      |
-| Exercise library | 188 uniquely identified exercise entries across the original muscle-group pools           |
-| Workout tracking | Per-exercise completion, session progress, and weekly history                             |
-| Exercise details | Equipment, sets, reps or duration, short technique cues, and personal notes               |
-| Local assets     | Replaceable exercise photos with missing-image placeholders                               |
-| Settings         | Circuit timing, reminder toggle, week advancement, and confirmed resets                   |
-| Reminders        | Local notifications Monday–Saturday at 8:00 AM in device time                             |
-| Interface        | Dark theme, responsive layouts, large touch targets, and simple tab navigation            |
-| Persistence      | On-device storage, ordered writes, validation, and save-error retry                       |
+| Area             | Included                                                                                     |
+| ---------------- | -------------------------------------------------------------------------------------------- |
+| Training plan    | Four upper/lower lifting sessions, two conditioning sessions, and Sunday rest                |
+| Progression      | Stable four-week exercise blocks, rep targets, rest periods, and reps-in-reserve guidance    |
+| Recovery         | A lighter fourth week with fewer sets and no automatic load increase                         |
+| Exercise library | 188 uniquely identified exercise entries across the original muscle-group pools              |
+| Workout tracking | Per-exercise completion, skipped sessions with reasons, session progress, and weekly history |
+| Exercise details | Equipment, sets, reps or duration, short technique cues, and personal notes                  |
+| Local assets     | Replaceable exercise photos with missing-image placeholders                                  |
+| Settings         | Circuit timing, reminder toggle, week advancement, and confirmed resets                      |
+| Reminders        | Local notifications Monday–Saturday at 8:00 AM in device time                                |
+| Interface        | Dark theme, responsive layouts, large touch targets, and simple tab navigation               |
+| Persistence      | On-device storage, ordered writes, validation, and save-error retry                          |
 
 No sign-in, backend server, API key, or cloud account is required for the app's core features.
 
@@ -119,7 +119,7 @@ git clone https://github.com/rajjitlai/Recomp.git recomp-workout
 cd recomp-workout
 ```
 
-The repository is currently private, so cloning requires GitHub access granted by the owner and authentication through your configured Git credential manager. The code is MIT-licensed; public repository access has not been enabled yet. If you already have the checkout, open a terminal in that directory instead. For the existing Windows workspace:
+The repository is public and MIT-licensed. Anyone can clone it without requesting access. If you already have the checkout, open a terminal in that directory instead. For the existing Windows workspace:
 
 ```powershell
 Set-Location 'D:\Codes\Health'
@@ -241,6 +241,14 @@ Blocks follow the stable calendar week ID, not the install date. Starting the ap
 
 General principles draw on [ACSM resistance-training guidance](https://acsm.org/resistance-training-guidelines-update-2026/) and [CDC activity and weight guidance](https://www.cdc.gov/healthy-weight-growth/physical-activity/). The specific split and four-week structure are app programming choices. Outcomes vary; this is general training guidance, not individualized medical or nutrition advice.
 
+### Missed workouts and holidays
+
+Open a workout, select **Skip workout**, choose Holiday, Travel, Rest, Busy, or Other, and confirm. Skipped sessions appear on Home, Train, and History with their reason. They do not count as completed; any exercises already checked off remain saved and visible.
+
+Select **Reopen workout** to remove the skip and continue the session. Completion controls are disabled while a session is skipped. Completed sessions cannot be marked skipped.
+
+The schedule remains calendar-based: skipping does not shift other sessions, add catch-up workouts, pause the four-week block, or increase prescribed training. For a multi-day holiday, mark each affected session individually. Unmarked days remain incomplete; the app never guesses that you skipped. Reminders remain active until disabled in Settings. Skip reasons and timestamps persist locally across restarts.
+
 ## Screens and navigation
 
 | Route            | Screen                                                |
@@ -356,7 +364,7 @@ Validated state → ordered save queue → AsyncStorage
 
 ### What stays on the device
 
-Completion marks, workout history, notes, settings, the week offset, and saved plan data use AsyncStorage. Exercise assets are bundled locally. Local notifications do not require a remote push server.
+Completion marks, skip reasons and timestamps, workout history, notes, settings, the week offset, and saved plan data use AsyncStorage. Exercise assets are bundled locally. Local notifications do not require a remote push server.
 
 There is no cloud sync, account system, or backup/export feature. AsyncStorage is not an encrypted secrets store. Clearing app/browser storage or uninstalling the app can remove progress. On web, different origins or ports have separate storage.
 
@@ -524,6 +532,10 @@ Contributions are welcome. Read [CONTRIBUTING.md](./CONTRIBUTING.md) for the dev
 6. Include a concise description of behavior changes and validation in the pull request.
 
 Do not commit credentials, signing files, generated exports, or `node_modules`. When generating native projects, deliberately choose whether to maintain those directories or regenerate them; the current checkout does not contain native `android/` or `ios/` projects.
+
+## Credits
+
+Recomp was made by **GPT-6 Astra**, with direction and feedback from **Rajjit Laishram**. See [Credit.md](./Credit.md) for the full attribution.
 
 ## License
 

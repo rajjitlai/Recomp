@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
-import { useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { exerciseById } from "../../data/exercises";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
 import { ExerciseImage } from "../../components/ExerciseImage";
@@ -14,6 +14,8 @@ import {
 } from "../../components/ui";
 import { useWorkout } from "../../context/WorkoutContext";
 import { generateWeeklyWorkout } from "../../services/workoutRotation";
+
+import { historyKey } from "../../services/state";
 
 export default function ExerciseDetail() {
   const {
@@ -53,6 +55,7 @@ export default function ExerciseDetail() {
     validWeek &&
     (data.plans[week] ?? generateWeeklyWorkout(week)).blockWeek === 4;
   const done = validDay && completed(validDay, week).includes(id);
+  const skipped = validDay && data.history[historyKey(week, validDay)]?.skipped;
   const circuit = (dayPlan?.rounds ?? 1) > 1 || exercise.type !== "strength";
   return (
     <Page back title="Exercise">
@@ -127,16 +130,27 @@ export default function ExerciseDetail() {
       {inWorkout && validDay && (
         <View className="mt-5">
           <Button
-            label={done ? "Completed — undo" : "Mark complete"}
+            label={
+              skipped
+                ? "Reopen from workout page"
+                : done
+                  ? "Completed — undo"
+                  : "Mark complete"
+            }
             icon="check-circle"
             onPress={() =>
-              dispatch({
-                type: "toggle",
-                week,
-                day: validDay,
-                id,
-                date: new Date().toISOString(),
-              })
+              skipped
+                ? router.push({
+                    pathname: "/workout/[day]",
+                    params: { day: validDay, week },
+                  })
+                : dispatch({
+                    type: "toggle",
+                    week,
+                    day: validDay,
+                    id,
+                    date: new Date().toISOString(),
+                  })
             }
           />
         </View>
