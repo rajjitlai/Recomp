@@ -1,9 +1,12 @@
 import { Linking, Text, View } from "react-native";
 import { Label, Page, Panel, SectionTitle, Button } from "../components/ui";
 import { useWorkout } from "../context/WorkoutContext";
+import { trainingProfiles } from "../data/trainingLevels";
+import { workoutDays } from "../data/exerciseTypes";
 
 export default function Program() {
   const { plan } = useWorkout();
+  const profile = trainingProfiles[plan.trainingLevel ?? "intermediate"];
   return (
     <Page back title="Your plan">
       <Label accent>FAT LOSS + MUSCLE GAIN</Label>
@@ -11,16 +14,20 @@ export default function Program() {
         {"Build strength.\nKeep it sustainable."}
       </Text>
       <Text className="mt-4 text-base leading-7 text-muted">
-        A starting program for someone with 6+ months of consistent lifting.
-        Progress depends on training, food, and recovery; losing fat and gaining
-        muscle together is possible, but not guaranteed.
+        {profile.label} plan. {profile.description} Progress depends on
+        training, food, and recovery; losing fat and gaining muscle together is
+        possible, but not guaranteed.
       </Text>
       <SectionTitle title="Your weekly rhythm" />
       <Panel>
         <Text className="text-base leading-8 text-white">
-          Monday · Upper A{"\n"}Tuesday · Lower A{"\n"}Wednesday · Easy
-          conditioning{"\n"}Thursday · Upper B{"\n"}Friday · Lower B{"\n"}
-          Saturday · Conditioning + core{"\n"}Sunday · Rest
+          {workoutDays
+            .map(
+              (day) =>
+                `${day[0]!.toUpperCase()}${day.slice(1)} · ${plan.days[day].title}`,
+            )
+            .join("\n")}
+          {"\n"}Sunday · Rest
         </Text>
         <Text className="mt-4 text-sm leading-6 text-muted">
           {plan.program
@@ -44,7 +51,9 @@ export default function Program() {
           Week four reduces working sets as a conservative recovery default. It
           is not a requirement for everyone. Reduce volume earlier if recovery
           suffers. Use exercise notes to record weights, reps, and how the sets
-          felt; the app does not infer progress from checkboxes.
+          felt. Automatic level progression uses completed training weeks to
+          adjust volume, but never increases your lifting weight. You can change
+          level or disable automatic progression in Settings.
         </Text>
       </Panel>
       <SectionTitle title="The fat-loss logic" />

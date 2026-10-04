@@ -7,6 +7,8 @@ import { todayDay, weekLabel } from "../../services/workoutRotation";
 import { Button, Label, Page, Panel, SectionTitle } from "../../components/ui";
 import { WorkoutCard } from "../../components/WorkoutCard";
 import { ProgressBar } from "../../components/ProgressBar";
+import { TrainingLevelControl } from "../../components/TrainingLevelControl";
+import { trainingProfiles } from "../../data/trainingLevels";
 
 import { historyKey } from "../../services/state";
 export default function Home() {
@@ -14,16 +16,19 @@ export default function Home() {
   const wide = useWindowDimensions().width >= 850;
   const today = todayDay();
   const workout = plan.days[today ?? "monday"];
-  const completeDays = workoutDays.filter(
+  const trackedDays = workoutDays.filter(
+    (day) => plan.trainingLevel !== "beginner" || plan.days[day].rounds === 1,
+  );
+  const completeDays = trackedDays.filter(
     (day) =>
       !data.history[historyKey(week, day)]?.skipped &&
       completed(day).length === plan.days[day].exercises.length,
   ).length;
-  const completeExercises = workoutDays.reduce(
+  const completeExercises = trackedDays.reduce(
     (sum, day) => sum + completed(day).length,
     0,
   );
-  const skippedDays = workoutDays.filter(
+  const skippedDays = trackedDays.filter(
     (day) => data.history[historyKey(week, day)]?.skipped,
   ).length;
   const todaySkipped = today && data.history[historyKey(week, today)]?.skipped;
@@ -39,6 +44,33 @@ export default function Home() {
       <Text className="mb-7 text-base text-muted">
         Build muscle. Support fat loss. Recover well.
       </Text>
+      <View className="mb-6">
+        {!data.training.configured ? (
+          <TrainingLevelControl />
+        ) : (
+          <Button
+            label={`${trainingProfiles[plan.trainingLevel ?? "intermediate"].label} plan · Change level`}
+            secondary
+            icon="sliders"
+            onPress={() => router.push("/settings")}
+          />
+        )}
+        {data.training.configured &&
+          data.training.level !== (plan.trainingLevel ?? "intermediate") && (
+            <Text className="mt-2 text-sm text-lime">
+              {trainingProfiles[data.training.level].label} starts with your
+              next untouched week.
+            </Text>
+          )}
+        {data.training.promotedAt && (
+          <Text className="mt-2 text-sm text-muted">
+            Auto-progressed to{" "}
+            {trainingProfiles[data.training.level].label.toLowerCase()} on{" "}
+            {new Date(data.training.promotedAt).toLocaleDateString()}. Adjust
+            anytime in Settings.
+          </Text>
+        )}
+      </View>
       <View style={{ flexDirection: wide ? "row" : "column", gap: 28 }}>
         <View style={{ flex: wide ? 1.1 : undefined }}>
           <View className="overflow-hidden rounded-3xl border border-[#657a45] bg-[#28351e] p-6 md:p-8">
@@ -66,7 +98,7 @@ export default function Home() {
                 <Text className="text-2xl font-bold text-white">
                   {today
                     ? workout.exercises.length.toString().padStart(2, "0")
-                    : "06"}
+                    : String(trackedDays.length).padStart(2, "0")}
                 </Text>
                 <Text className="mt-1 text-xs text-[#c2ceb3]">
                   {today ? "Exercises" : "Training days"}
@@ -115,33 +147,42 @@ export default function Home() {
               <View>
                 <Text className="text-3xl font-bold text-lime">
                   {completeDays}
-                  <Text className="text-lg text-muted"> / 6</Text>
+                  <Text className="text-lg text-muted">
+                    {" "}
+                    / {trackedDays.length}
+                  </Text>
                 </Text>
                 <Text className="mt-1 text-sm text-muted">
-                  Sessions completed
+                  {plan.trainingLevel === "beginner"
+                    ? "Lifting sessions completed"
+                    : "Sessions completed"}
                 </Text>
               </View>
               <Feather name="trending-up" size={28} color="#d4f77d" />
             </View>
-            <ProgressBar value={completeDays} total={6} />
+            <ProgressBar value={completeDays} total={trackedDays.length} />
             <Text className="mt-3 text-sm text-muted">
-              {skippedDays} skipped · {6 - completeDays - skippedDays} sessions
+              {skippedDays} skipped ·{" "}
+              {trackedDays.length - completeDays - skippedDays} sessions
               remaining
             </Text>
             <Text className="mt-4 text-sm text-muted">
               {completeExercises} of{" "}
-              {workoutDays.reduce(
+              {trackedDays.reduce(
                 (sum, day) => sum + plan.days[day].exercises.length,
                 0,
               )}{" "}
               exercises completed this week
+              {plan.trainingLevel === "beginner"
+                ? " · optional recovery circuits are extra"
+                : ""}
             </Text>
           </Panel>
           <View className="mt-5 flex-row items-start gap-3 px-1">
             <Feather name="refresh-cw" size={17} color="#a3aa9c" />
             <Text className="flex-1 text-sm leading-5 text-muted">
               {plan.program
-                ? `Four lifting days. Two conditioning days. Week ${plan.blockWeek} of 4${plan.blockWeek === 4 ? " — lighter volume for recovery" : " — build quality reps before adding weight"}.`
+                ? `${trainingProfiles[plan.trainingLevel ?? "intermediate"].schedule}. Week ${plan.blockWeek} of 4${plan.blockWeek === 4 ? " — lighter volume for recovery" : " — build quality reps before adding weight"}.`
                 : "Your started week stays unchanged. The new muscle + fat-loss program begins next week."}
             </Text>
           </View>

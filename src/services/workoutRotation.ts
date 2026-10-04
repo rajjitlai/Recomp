@@ -1,13 +1,19 @@
 import { pools } from "../data/exercises";
+import {
+  easyAlternatives,
+  easyAlternativeNames,
+} from "../data/exerciseAlternatives";
 import type {
   DayPlan,
   Exercise,
   WeeklyPlan,
   WorkoutDay,
+  TrainingLevel,
 } from "../data/exerciseTypes";
 import { split } from "../data/workoutPlans";
 import {
   strengthSlots,
+  beginnerStrengthSlots,
   conditioningSlots,
   recompositionSplit,
   type TrainingSlot,
@@ -103,7 +109,10 @@ function select(
 
 // Four-week blocks prioritize repeatable practice and progressive overload.
 // Week four reduces sets; completing a checkbox never increases the load.
-export function generateWeeklyWorkout(weekNumber: number): WeeklyPlan {
+export function generateWeeklyWorkout(
+  weekNumber: number,
+  level: TrainingLevel = "intermediate",
+): WeeklyPlan {
   if (!Number.isSafeInteger(weekNumber) || Math.abs(weekNumber) > 1_000_000)
     throw new Error("Invalid week number");
   const block = Math.floor(weekNumber / 4);
@@ -117,20 +126,38 @@ export function generateWeeklyWorkout(weekNumber: number): WeeklyPlan {
     });
     const exercise =
       pool[(((block + offset) % pool.length) + pool.length) % pool.length]!;
+    const alternative =
+      pool.find(
+        (e) => e.id !== exercise.id && e.equipment !== exercise.equipment,
+      ) ??
+      pool.find((e) => e.id !== exercise.id) ??
+      easyAlternatives.find(
+        (e) => e.name === easyAlternativeNames[exercise.name],
+      );
+    if (!alternative) throw new Error(`Missing alternative: ${exercise.name}`);
     return {
       ...exercise,
-      sets: lighter ? Math.max(1, slot.sets - 1) : slot.sets,
-      reps: slot.reps,
+      alternateId: alternative.id,
+      sets: Math.max(
+        1,
+        (level === "beginner"
+          ? 2
+          : slot.sets + (level === "advanced" ? 1 : 0)) - (lighter ? 1 : 0),
+      ),
+      reps: level === "beginner" && slot.reps === "6–10" ? "8–12" : slot.reps,
       strengthRestSeconds: slot.rest,
-      repsInReserve: lighter || blockWeek === 1 ? 3 : 2,
+      repsInReserve: level === "beginner" || lighter || blockWeek === 1 ? 3 : 2,
     };
   };
   const days = Object.fromEntries(
     workoutDays.map((day) => {
-      const slots = strengthSlots[day];
-      const rounds = day === "wednesday" || lighter ? 2 : 3;
+      const slots = (
+        level === "beginner" ? beginnerStrengthSlots : strengthSlots
+      )[day];
+      const rounds =
+        level === "beginner" || day === "wednesday" || lighter ? 2 : 3;
       const circuitSlots =
-        day === "wednesday"
+        level === "beginner" || day === "wednesday"
           ? [
               conditioningSlots[0]!,
               conditioningSlots[3]!,
@@ -153,13 +180,23 @@ export function generateWeeklyWorkout(weekNumber: number): WeeklyPlan {
       const guidance = slots
         ? lighter
           ? "Lighter week: warm up, then use fewer working sets and keep 3 good reps left. Keep or reduce the weight. Do not use this reduced-volume session to justify a load increase; reassess at normal volume in the next block."
-          : `Warm up, then complete the listed working sets. Finish each set with ${blockWeek === 1 ? 3 : 2} good reps left. When every set reaches the top of its range at that effort, increase by the smallest available weight next time. If form or reps drop, keep or reduce the load.`
-        : "Keep a conversational pace; this is not an all-out HIIT test. March for high knees, use standing heel curls for butt kicks, and step rather than jump. Take extra rest or shorten the session when needed. For side planks, split the work interval between sides.";
+          : `Warm up, then complete the listed working sets. Finish each set with ${level === "beginner" || blockWeek === 1 ? 3 : 2} good reps left. When every set reaches the top of its range at that effort, increase by the smallest available weight next time. If form or reps drop, keep or reduce the load.`
+        : `${level === "beginner" ? "Optional recovery day: rest or take an easy walk instead if you prefer. " : ""}Keep a conversational pace; this is not an all-out HIIT test. March for high knees, use standing heel curls for butt kicks, and step rather than jump. Take extra rest or shorten the session when needed. For side planks, split the work interval between sides.`;
       return [
         day,
         {
           day,
           ...recompositionSplit[day],
+          ...(level === "beginner"
+            ? {
+                title: slots
+                  ? `Full body · ${day === "monday" ? "A" : day === "wednesday" ? "B" : "C"}`
+                  : "Optional · Move + Recover",
+                subtitle: slots
+                  ? "Technique practice · 5 movements · manageable volume"
+                  : "Rest, walk, or try an easy 2-round circuit",
+              }
+            : {}),
           exercises,
           rounds: slots ? 1 : rounds,
           guidance,
@@ -171,6 +208,7 @@ export function generateWeeklyWorkout(weekNumber: number): WeeklyPlan {
     weekNumber,
     version: 1,
     program: "recomposition-v1",
+    trainingLevel: level,
     blockWeek,
     days,
   };

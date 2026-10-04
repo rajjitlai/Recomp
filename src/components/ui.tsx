@@ -96,7 +96,7 @@ export function Page({
                 <Image
                   source={require("../../assets/logo.png")}
                   accessibilityIgnoresInvertColors
-                  className="h-7 w-7"
+                  style={{ width: 28, height: 28 }}
                   resizeMode="contain"
                 />
               )}

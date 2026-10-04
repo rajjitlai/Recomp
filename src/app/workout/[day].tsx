@@ -1,3 +1,4 @@
+import { getPlan } from "../../services/trainingProgress";
 import { Text, View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import { Page, Label, Panel, Empty } from "../../components/ui";
@@ -8,10 +9,7 @@ import { SkipWorkoutControl } from "../../components/SkipWorkoutControl";
 import { historyKey } from "../../services/state";
 import { useWorkout } from "../../context/WorkoutContext";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
-import {
-  generateWeeklyWorkout,
-  weekLabel,
-} from "../../services/workoutRotation";
+import { weekLabel } from "../../services/workoutRotation";
 
 export default function Workout() {
   const params = useLocalSearchParams<{ day: string; week?: string }>();
@@ -31,7 +29,7 @@ export default function Workout() {
       </Page>
     );
   const day = params.day as WorkoutDay;
-  const plan = data.plans[week] ?? generateWeeklyWorkout(week);
+  const plan = getPlan(data, week);
   const workout = plan.days[day];
   const done = completed(day, week);
   const skipped = data.history[historyKey(week, day)]?.skipped;
@@ -82,6 +80,13 @@ export default function Workout() {
         )}
       </Panel>
       <View className="mt-6">
+        {plan.program && (
+          <Text className="mb-4 text-sm leading-6 text-muted">
+            Choose one exercise per slot, not both. Use an alternative when
+            equipment is unavailable; select a suitable weight for that
+            movement. Tap the selected exercise for instructions.
+          </Text>
+        )}
         {workout.exercises.map((exercise, index) => (
           <ExerciseCard
             key={exercise.id}
@@ -93,6 +98,9 @@ export default function Workout() {
             disabled={!!skipped}
             timing={data.settings.workSeconds}
             rounds={workout.rounds}
+            swap={() =>
+              dispatch({ type: "swapExercise", week, day, id: exercise.id })
+            }
             toggle={() =>
               dispatch({
                 type: "toggle",

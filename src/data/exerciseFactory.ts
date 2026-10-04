@@ -115,7 +115,16 @@ export function createExercise(name: string, pool: Pool): Exercise {
     secondaryCategories:
       pool === "posterior" ? [glute ? "hamstrings" : "glutes"] : [],
     type: pool === "core" ? "core" : circuit ? "cardio" : "strength",
-    equipment,
+    equipment:
+      (
+        {
+          "Goblet Squat": "Dumbbell or kettlebell",
+          "Chest-Supported Row": "Dumbbells and incline bench",
+          "Hip Thrust": "Bench and barbell",
+          "Standing Calf Raise": "Calf raise machine or dumbbells",
+          "Seated Calf Raise": "Seated calf raise machine",
+        } as Record<string, string>
+      )[name] ?? equipment,
     sets: circuit ? 3 : compound || pool === "calves" ? 4 : 3,
     reps: pool === "calves" ? "12–20" : compound ? "6–10" : "10–15",
     workSeconds: 40,

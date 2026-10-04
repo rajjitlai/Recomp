@@ -11,6 +11,7 @@ import { useWorkout } from "../../context/WorkoutContext";
 import { todayDay, weekLabel } from "../../services/workoutRotation";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
 import { remindersAvailable, setReminders } from "../../services/notifications";
+import { TrainingLevelControl } from "../../components/TrainingLevelControl";
 
 const authorLinks = [
   { label: "GitHub", url: "https://github.com/rajjitlai" },
@@ -145,6 +146,8 @@ export default function Settings() {
         Settings.
       </Text>
       <Text className="text-base text-muted">Your routine, on your terms.</Text>
+      <SectionTitle title="Your training" />
+      <TrainingLevelControl />
       <SectionTitle title="Circuit timing" caption="Conditioning sessions" />
       <Panel>
         <Text className="mb-1 text-sm leading-5 text-muted">
@@ -303,7 +306,7 @@ export default function Settings() {
               setConfirmation({
                 title: "Delete all workout history?",
                 message:
-                  "This clears every completion mark and past session on this device. It cannot be undone. Your plans, notes, and settings will be kept.",
+                  "This clears every completion mark and past session on this device, including the activity counted toward automatic level progression. It cannot be undone. Your current level, plans, notes, and settings will be kept.",
                 label: "Delete all history",
                 action: () => dispatch({ type: "clearHistory" }),
               })

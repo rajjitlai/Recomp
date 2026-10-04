@@ -10,6 +10,7 @@ import { calvesExercises } from "./calves";
 import { conditioningExercises } from "./conditioning";
 import { bodyweightExercises } from "./bodyweight";
 import { coreExercises } from "./core";
+import { easyAlternatives } from "../exerciseAlternatives";
 
 export const pools = {
   chest: chestExercises,
@@ -25,7 +26,7 @@ export const pools = {
   bodyweight: bodyweightExercises,
   core: coreExercises,
 };
-export const exercises = Object.values(pools).flat();
+export const exercises = [...Object.values(pools).flat(), ...easyAlternatives];
 export const exerciseById = Object.fromEntries(
   exercises.map((exercise) => [exercise.id, exercise]),
 );

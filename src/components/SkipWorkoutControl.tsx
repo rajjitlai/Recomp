@@ -1,3 +1,4 @@
+import { getPlan } from "../services/trainingProgress";
 import { useState } from "react";
 import { Modal, Pressable, ScrollView, Text, View } from "react-native";
 import {
@@ -7,7 +8,6 @@ import {
 } from "../data/exerciseTypes";
 import { useWorkout } from "../context/WorkoutContext";
 import { historyKey } from "../services/state";
-import { generateWeeklyWorkout } from "../services/workoutRotation";
 import { Button, Panel } from "./ui";
 
 export function SkipWorkoutControl({
@@ -21,8 +21,7 @@ export function SkipWorkoutControl({
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState<SkipReason>("Holiday");
   const entry = data.history[historyKey(week, day)];
-  const total = (data.plans[week] ?? generateWeeklyWorkout(week)).days[day]
-    .exercises.length;
+  const total = getPlan(data, week).days[day].exercises.length;
   if (entry?.completedExercises.length === total && !entry.skipped) return null;
   return (
     <View className="my-5">

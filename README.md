@@ -10,11 +10,11 @@
 [![NativeWind](https://img.shields.io/badge/NativeWind-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white)](https://www.nativewind.dev/)
 [![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-526C36?style=flat-square)](#platform-support)
 
-Recomp is an MIT-licensed, open-source workout app that combines structured resistance training, manageable conditioning, and recovery guidance. It is designed as a starting program for someone with **6+ months of consistent lifting**, with offline-first progress tracking and a four-week training cycle.
+Recomp is an MIT-licensed, open-source workout app that combines structured resistance training, manageable conditioning, and recovery guidance. Choose a **beginner, intermediate, or advanced** plan, track progress offline, and optionally advance levels over consistent months of training.
 
 [Getting started](#getting-started) · [Training program](#training-program) · [Local images](#local-exercise-images) · [Development](#development-and-quality-checks) · [Troubleshooting](#troubleshooting)
 
-> **Project status:** Working local app. TypeScript checks, 15 automated tests, Expo Doctor (21/21 checks), and web/Android bundle exports have passed during development. Physical-device verification remains pending. The badges above describe the project; they are not live CI results.
+> **Project status:** Working local app. TypeScript checks, 25 automated tests, Expo Doctor (21/21 checks), and web/Android bundle exports have passed during development. Physical-device verification remains pending. The badges above describe the project; they are not live CI results.
 
 ## Contents
 
@@ -196,7 +196,39 @@ Rebuild the native client after changing native dependencies, config plugins, di
 
 ## Training program
 
+### Choose a training level
+
+New users choose a starting level on Home or in **Settings → Your training**. Until a choice is saved, the app previews Beginner and automatic advancement stays inactive. Existing installations retain the former program as Intermediate, with progression tracking starting on migration.
+
+| Level | Weekly style | Normal working sets |
+| --- | --- | --- |
+| Beginner | Full-body lifting Monday, Wednesday, Friday; optional easy movement Tuesday, Thursday, Saturday | 5 movements per lifting session, 2 sets, 3 good reps left |
+| Intermediate | 4 upper/lower lifting days and 2 easy conditioning days | 2–3 sets, 2–3 good reps left |
+| Advanced | 4 upper/lower lifting days and 2 easy conditioning days | 3–4 sets, 2–3 good reps left |
+
+Beginner plans prioritize machine, dumbbell and bodyweight practice. Their optional recovery days offer a six-movement, two-round circuit, or users may rest or walk instead. Home tracks the three lifting sessions as the weekly target; optional circuits do not count as missed required training.
+
+### Exercise alternatives
+
+Every exercise slot in the Beginner, Intermediate and Advanced plans offers two choices: the planned movement and one alternative. In a workout, tap **Use alternative** to replace that slot, or open the exercise to read the alternative’s instructions first. Perform one option, not both.
+
+- Alternatives retain the slot’s sets, rep target, rest and effort guidance; conditioning retains its work intervals and rounds. Choose a suitable weight for the replacement rather than copying the previous exercise’s load.
+- Choices are saved for that day and week, including after restarting the app. Completion and history record the exercise actually selected, and notes stay attached to their own exercise.
+- Completed exercises must be unchecked before switching. Skipped sessions must be resumed first. Other completed exercises stay unchanged.
+- Easy conditioning alternatives include Side Steps, March in Place and Standing Heel Curls. These use the app’s text/icon fallback until images are supplied.
+- Historical classic plans remain unchanged. A new week follows its generated plan; substitutions do not become permanent preferences.
+
+### Automatic level progression
+
+Automatic progression is enabled by default and can be turned off in Settings. Beginner advances to Intermediate after **12 active weeks** (at least about 3 months), then Intermediate advances to Advanced after **another 24 active weeks** (at least about 6 months). Advanced is the highest level. These are app pacing defaults, not validated measures of skill or recovery; choose a lower level or disable automation when appropriate. Frequency choices draw on [ACSM's progression guidance](https://pubmed.ncbi.nlm.nih.gov/19204579/).
+
+An active week is a finished real calendar week with at least three fully completed lifting sessions on separate dates, recorded after the current level began. Circuits, partial sessions, skipped workouts, future dates, and the manual week offset do not accelerate advancement. The app checks on launch and calendar-day changes, including returning from the background; it does not need to run while closed. No automatic increase to lifting weight is made.
+
+Changing level updates the current and future untouched plans. Any week already containing completed exercises or a skipped session retains its original plan, and the new level applies to the next untouched week. Historical plans, notes, and completion records are retained. Manual level changes restart the advancement counter; clearing history removes the activity supporting that counter without lowering the selected level.
+
 ### Weekly schedule
+
+Intermediate and Advanced use this schedule:
 
 | Day       | Session          | Exercises | Rounds                       |
 | --------- | ---------------- | --------- | ---------------------------- |
@@ -221,7 +253,7 @@ This program supersedes the original body-part split and weekly exercise replace
 | 3          | Continue measured progression            | Normal working sets; approximately 2 good reps left                              |
 | 4          | Reduce fatigue                           | One fewer set per strength exercise, minimum one; approximately 3 good reps left |
 
-Normal strength prescriptions use 2–3 working sets, exercise-specific rep ranges, and 75–120 seconds of rest. Warm-up sets are additional. Exercise selection stays consistent within each four-week block and changes at the next block boundary.
+Normal strength prescriptions use the selected level's working sets, exercise-specific rep ranges, and 75–120 seconds of rest. Beginners keep approximately 3 good reps left throughout the block. Warm-up sets are additional. Exercise selection stays consistent within each four-week block and changes at the next block boundary; changing level may also change exercise selection.
 
 Blocks follow the stable calendar week ID, not the install date. Starting the app mid-block does not automatically begin at week one.
 
@@ -351,7 +383,7 @@ Workout context → screens and completion actions
 Validated state → ordered save queue → AsyncStorage
 ```
 
-- **Generation:** `generateWeeklyWorkout(weekNumber)` is a pure function. Week IDs count local calendar Mondays from January 6, 2020; four-week blocks select curated exercise variants.
+- **Generation:** `generateWeeklyWorkout(weekNumber, level)` is a pure function. Week IDs count local calendar Mondays from January 6, 2020; four-week blocks select curated exercise variants. Saved plans retain their own training level for accurate historical prescriptions.
 - **Legacy support:** `generateClassicWeeklyWorkout()` retains the original seeded pool rotation. It is used for legacy plan restoration and has separate test coverage.
 - **State:** `reduceData()` handles completion, notes, resets, timing, and week advancement independently of UI components.
 - **Hydration:** saved data is validated before use. Current/future untouched legacy weeks migrate to the new program; started legacy weeks and old history are retained.
@@ -360,7 +392,7 @@ Validated state → ordered save queue → AsyncStorage
 
 ### What stays on the device
 
-Completion marks, skip reasons and timestamps, workout history, notes, settings, the week offset, and saved plan data use AsyncStorage. Exercise assets are bundled locally. Local notifications do not require a remote push server.
+Completion marks, skip reasons and timestamps, workout history, notes, settings, training level and its start date, automatic-progression preference, the week offset, and saved plan data use AsyncStorage. Exercise assets are bundled locally. Local notifications do not require a remote push server.
 
 There is no cloud sync, account system, or backup/export feature. AsyncStorage is not an encrypted secrets store. Clearing app/browser storage or uninstalling the app can remove progress. On web, different origins or ports have separate storage.
 
@@ -374,6 +406,8 @@ There is no cloud sync, account system, or backup/export feature. AsyncStorage i
 | Reset all history       | Clears all completion/history; keeps notes, plans, and settings                                   |
 | Change circuit timing   | Updates circuit work, transition, and between-round durations                                     |
 | Toggle reminders        | Requests native permission when enabling and schedules/cancels local reminders                    |
+| Change training level   | Applies Beginner, Intermediate, or Advanced to untouched weeks; preserves started and historical weeks |
+| Automatic progression   | Enables or pauses automatic level changes after qualifying training weeks |
 
 Reset and week-control actions use confirmation dialogs. Automatic calendar advancement continues to include the saved manual offset.
 
@@ -419,7 +453,7 @@ npx expo export --platform all
 
 ### Automated coverage
 
-The current 11-test suite checks:
+The current 25-test suite checks:
 
 - Catalog completeness and unique exercise IDs.
 - Counts, muscle coverage, and deterministic legacy rotation across 200 weeks.
@@ -430,6 +464,10 @@ The current 11-test suite checks:
 - Monday boundaries, year transitions, and week-ID round trips.
 - Save/reload, notes, settings, undo, and targeted resets.
 - Invalid-data rejection and serialized-write failure recovery.
+- Training levels, full-body balance, level-specific volume, and reduced fourth-week sets.
+- Alternative coverage, collision-free pairs, saved substitutions, completion locks and invalid-choice validation.
+- Existing-profile migration, manual changes, and preservation of started plans.
+- Automatic progression thresholds, opt-out, upper limit, and exclusion of skips, circuits, partial sessions, duplicate dates, and manual week jumps.
 
 No CI workflow is currently configured. Run these checks locally; badge colors do not indicate automated build status.
 
@@ -438,6 +476,7 @@ No CI workflow is currently configured. Run these checks locally; badge colors d
 Before distributing a native release, verify on real devices:
 
 - [ ] Fresh installation and return launch.
+- [ ] Starting-level selection, Settings changes, and preservation of an already-started week.
 - [ ] Completion and notes persist after force-close/reopen.
 - [ ] Installed release launches offline.
 - [ ] Notification permission granted/denied and 8 AM reminder delivery.

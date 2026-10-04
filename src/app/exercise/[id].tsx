@@ -1,3 +1,4 @@
+import { getPlan } from "../../services/trainingProgress";
 import { useEffect, useState } from "react";
 import { Text, TextInput, View } from "react-native";
 import { router, useLocalSearchParams } from "expo-router";
@@ -13,9 +14,9 @@ import {
   SectionTitle,
 } from "../../components/ui";
 import { useWorkout } from "../../context/WorkoutContext";
-import { generateWeeklyWorkout } from "../../services/workoutRotation";
 
 import { historyKey } from "../../services/state";
+import { alternativeFor } from "../../services/exerciseAlternatives";
 
 export default function ExerciseDetail() {
   const {
@@ -45,15 +46,12 @@ export default function ExerciseDetail() {
     day && workoutDays.includes(day as WorkoutDay) ? (day as WorkoutDay) : null;
   const validWeek = Number.isSafeInteger(week) && Math.abs(week) <= 1_000_000;
   const dayPlan =
-    validDay && validWeek
-      ? (data.plans[week] ?? generateWeeklyWorkout(week)).days[validDay]
-      : null;
+    validDay && validWeek ? getPlan(data, week).days[validDay] : null;
   const prescribed = dayPlan?.exercises.find((e) => e.id === id);
   const exercise = prescribed ?? baseExercise;
+  const alternative = prescribed && alternativeFor(prescribed);
   const inWorkout = !!prescribed;
-  const lighter =
-    validWeek &&
-    (data.plans[week] ?? generateWeeklyWorkout(week)).blockWeek === 4;
+  const lighter = validWeek && getPlan(data, week).blockWeek === 4;
   const done = validDay && completed(validDay, week).includes(id);
   const skipped = validDay && data.history[historyKey(week, validDay)]?.skipped;
   const circuit = (dayPlan?.rounds ?? 1) > 1 || exercise.type !== "strength";
@@ -98,6 +96,42 @@ export default function ExerciseDetail() {
       <Text className="text-base leading-7 text-muted">
         {exercise.instructions}
       </Text>
+      {alternative && validDay && (
+        <View className="mt-5">
+          <Panel>
+            <Label accent>ALTERNATIVE · CHOOSE ONE</Label>
+            <Text className="mt-3 text-lg font-bold text-white">
+              {alternative.name}
+            </Text>
+            <Text className="my-3 text-sm leading-6 text-muted">
+              {alternative.equipment}. Keep the listed{" "}
+              {circuit ? "work interval and rounds" : "sets and rep target"};
+              choose a suitable weight for this movement. Do not do both
+              exercises for this slot.
+            </Text>
+            <Text className="mb-4 text-sm leading-6 text-muted">
+              {alternative.instructions}
+            </Text>
+            <Button
+              label={`Use ${alternative.name}`}
+              secondary
+              disabled={!!done || !!skipped}
+              onPress={() => {
+                dispatch({ type: "swapExercise", week, day: validDay, id });
+                router.replace({
+                  pathname: "/exercise/[id]",
+                  params: { id: alternative.id, day: validDay, week },
+                });
+              }}
+            />
+            {!!done && (
+              <Text className="mt-3 text-xs text-muted">
+                Uncheck completion before changing this exercise.
+              </Text>
+            )}
+          </Panel>
+        </View>
+      )}
       {circuit && (
         <Text className="mt-3 text-base text-muted">
           {data.settings.restSeconds}s transition ·{" "}

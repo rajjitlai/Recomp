@@ -137,6 +137,26 @@ export const strengthSlots: Partial<Record<WorkoutDay, TrainingSlot[]>> = {
   thursday: [incline, fly, row, pull, shoulderPress, rear],
   friday: [squat, unilateral, hinge, curl, glutes, calves],
 };
+const beginnerSquat = slot("quads", ["Goblet Squat", "Leg Press"], 2, "8–12");
+const beginnerPress = slot(
+  "chest",
+  ["Machine Chest Press", "Flat Dumbbell Press"],
+  2,
+  "8–12",
+);
+const beginnerRow = slot(
+  "back",
+  ["Seated Cable Row", "Chest-Supported Row"],
+  2,
+  "8–12",
+);
+export const beginnerStrengthSlots: Partial<
+  Record<WorkoutDay, TrainingSlot[]>
+> = {
+  monday: [beginnerSquat, beginnerPress, beginnerRow, curl, calves],
+  wednesday: [beginnerSquat, beginnerPress, pull, glutes, side],
+  friday: [beginnerSquat, beginnerPress, beginnerRow, curl, glutes],
+};
 export const recompositionSplit: Record<
   WorkoutDay,
   { title: string; subtitle: string }

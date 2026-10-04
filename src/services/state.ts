@@ -3,9 +3,20 @@ import type {
   WorkoutDay,
   Settings,
   SkipReason,
+  TrainingLevel,
 } from "../data/exerciseTypes";
-import { workoutDays, skipReasons } from "../data/exerciseTypes";
+import {
+  workoutDays,
+  skipReasons,
+  trainingLevels,
+} from "../data/exerciseTypes";
+import {
+  applyTrainingLevel,
+  getPlan,
+  trainingProgress,
+} from "./trainingProgress";
 import { exerciseById } from "../data/exercises";
+import { swapExercise } from "./exerciseAlternatives";
 import {
   generateWeeklyWorkout,
   generateClassicWeeklyWorkout,
@@ -18,6 +29,12 @@ export const initialData = (): AppData => ({
   plans: {},
   history: {},
   notes: {},
+  training: {
+    level: "beginner",
+    configured: false,
+    autoAdvance: true,
+    startedAt: null,
+  },
   settings: {
     workSeconds: 40,
     restSeconds: 20,
@@ -27,6 +44,10 @@ export const initialData = (): AppData => ({
 });
 export const historyKey = (week: number, day: WorkoutDay) => `${week}:${day}`;
 export type Action =
+  | { type: "swapExercise"; week: number; day: WorkoutDay; id: string }
+  | { type: "trainingLevel"; level: TrainingLevel; week: number; date: string }
+  | { type: "trainingAuto"; enabled: boolean }
+  | { type: "advanceTraining"; week: number; date: string }
   | { type: "ensureWeek"; week: number }
   | { type: "toggle"; week: number; day: WorkoutDay; id: string; date: string }
   | { type: "resetWorkout"; week: number; day: WorkoutDay }
@@ -45,6 +66,54 @@ export type Action =
   | { type: "note"; id: string; note: string };
 
 export function reduceData(data: AppData, action: Action): AppData {
+  if (action.type === "swapExercise") {
+    const key = historyKey(action.week, action.day);
+    const entry = data.history[key];
+    if (entry?.skipped || entry?.completedExercises.includes(action.id))
+      return data;
+    const plan = getPlan(data, action.week);
+    const workout = swapExercise(plan.days[action.day], action.id);
+    if (workout === plan.days[action.day]) return data;
+    return {
+      ...data,
+      plans: {
+        ...data.plans,
+        [action.week]: {
+          ...plan,
+          days: { ...plan.days, [action.day]: workout },
+        },
+      },
+      history: entry
+        ? {
+            ...data.history,
+            [key]: { ...entry, exercises: workout.exercises.map((e) => e.id) },
+          }
+        : data.history,
+    };
+  }
+  if (action.type === "trainingLevel") {
+    if (data.training.configured && action.level === data.training.level)
+      return data;
+    return applyTrainingLevel(data, action.level, action.week, action.date);
+  }
+  if (action.type === "trainingAuto")
+    return {
+      ...data,
+      training: { ...data.training, autoAdvance: action.enabled },
+    };
+  if (action.type === "advanceTraining") {
+    if (!data.training.configured || !data.training.autoAdvance) return data;
+    const progress = trainingProgress(data, new Date(action.date));
+    return progress.ready && progress.nextLevel
+      ? applyTrainingLevel(
+          data,
+          progress.nextLevel,
+          action.week,
+          action.date,
+          true,
+        )
+      : data;
+  }
   if (action.type === "ensureWeek")
     return data.plans[action.week]
       ? data
@@ -52,12 +121,12 @@ export function reduceData(data: AppData, action: Action): AppData {
           ...data,
           plans: {
             ...data.plans,
-            [action.week]: generateWeeklyWorkout(action.week),
+            [action.week]: getPlan(data, action.week),
           },
         };
   if (action.type === "skipWorkout") {
     const key = historyKey(action.week, action.day);
-    const plan = data.plans[action.week] ?? generateWeeklyWorkout(action.week);
+    const plan = getPlan(data, action.week);
     const exercises = plan.days[action.day].exercises.map((e) => e.id);
     const entry = data.history[key];
     if (entry?.completedExercises.length === exercises.length) return data;
@@ -85,7 +154,7 @@ export function reduceData(data: AppData, action: Action): AppData {
     return { ...data, history: { ...data.history, [key]: resumed } };
   }
   if (action.type === "toggle") {
-    const plan = data.plans[action.week] ?? generateWeeklyWorkout(action.week);
+    const plan = getPlan(data, action.week);
     const ids = plan.days[action.day].exercises.map((e) => e.id);
     if (!ids.includes(action.id)) return data;
     const key = historyKey(action.week, action.day);
@@ -119,8 +188,7 @@ export function reduceData(data: AppData, action: Action): AppData {
       ...data,
       plans: {
         ...data.plans,
-        [action.week]:
-          data.plans[action.week] ?? generateWeeklyWorkout(action.week),
+        [action.week]: getPlan(data, action.week),
       },
     };
   if (action.type === "newWeek")
@@ -204,6 +272,32 @@ export function decodeData(
       throw new Error("Unknown saved exercise");
   }
   const data = value as unknown as AppData;
+  if (value.training === undefined) {
+    // Existing users retain the former six-month/intermediate program. Begin
+    // progression tracking now rather than promoting from historical workouts.
+    data.training = {
+      level: "intermediate",
+      configured: true,
+      autoAdvance: true,
+      startedAt: new Date().toISOString(),
+    };
+  } else {
+    const training = value.training;
+    if (
+      !record(training) ||
+      !trainingLevels.includes(training.level as TrainingLevel) ||
+      typeof training.configured !== "boolean" ||
+      typeof training.autoAdvance !== "boolean" ||
+      (training.startedAt !== null &&
+        (typeof training.startedAt !== "string" ||
+          !Number.isFinite(Date.parse(training.startedAt)))) ||
+      (training.configured && training.startedAt === null) ||
+      (training.promotedAt !== undefined &&
+        (typeof training.promotedAt !== "string" ||
+          !Number.isFinite(Date.parse(training.promotedAt))))
+    )
+      throw new Error("Invalid saved training profile");
+  }
   // Preserve already-started legacy weeks. Only untouched current/future weeks
   // move to the new program; historical exercise IDs and completion stay intact.
   data.plans = Object.fromEntries(
@@ -215,6 +309,13 @@ export function decodeData(
     ].map((key) => {
       const week = Number(key);
       const saved = data.plans[key];
+      if (!Number.isSafeInteger(week) || Math.abs(week) > 1_000_000)
+        throw new Error("Invalid saved plan week");
+      if (
+        saved?.trainingLevel !== undefined &&
+        !trainingLevels.includes(saved.trainingLevel)
+      )
+        throw new Error("Invalid saved training level");
       const started = Object.values(data.history).some(
         (entry) =>
           entry.weekNumber === week &&
@@ -226,9 +327,30 @@ export function decodeData(
         saved?.program === "recomposition-v1" ||
         (!started && week >= calendarWeek + data.weekOffset);
       const plan = useNew
-        ? generateWeeklyWorkout(week)
+        ? generateWeeklyWorkout(
+            week,
+            saved?.program === "recomposition-v1"
+              ? (saved.trainingLevel ?? "intermediate")
+              : data.training.level,
+          )
         : generateClassicWeeklyWorkout(week);
       // Saved history is authoritative for legacy exercise membership.
+      if (saved?.program === "recomposition-v1")
+        for (const day of workoutDays) {
+          const choices = saved.days?.[day]?.selectedAlternatives;
+          if (choices === undefined) continue;
+          if (!record(choices))
+            throw new Error("Invalid saved exercise alternatives");
+          for (const [id, alternateId] of Object.entries(choices)) {
+            const exercise = plan.days[day].exercises.find((e) => e.id === id);
+            if (!exercise || exercise.alternateId !== alternateId)
+              throw new Error("Invalid saved exercise alternative");
+            const swapped = swapExercise(plan.days[day], id);
+            if (swapped === plan.days[day])
+              throw new Error("Duplicate saved exercise alternative");
+            plan.days[day] = swapped;
+          }
+        }
       if (!useNew)
         for (const day of workoutDays) {
           const entry = data.history[historyKey(week, day)];

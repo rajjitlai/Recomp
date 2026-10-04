@@ -96,7 +96,8 @@ test("200 weekly plans preserve counts, category balance, uniqueness, and determ
       .filter((e) => ["biceps", "triceps"].includes(e.category));
     assert.equal(new Set(arms.map((e) => e.id)).size, arms.length);
   }
-  for (const exercise of exercises)
+  // Alternatives outside the legacy pools are intentionally not auto-selected.
+  for (const exercise of Object.values(pools).flat())
     assert.ok(seen.has(exercise.id), `${exercise.id} never selected`);
 });
 

@@ -19,6 +19,7 @@ export type Pool =
   | "conditioning"
   | "bodyweight";
 export interface Exercise {
+  alternateId?: string;
   id: string;
   name: string;
   category: ExerciseCategory;
@@ -54,6 +55,7 @@ export const workoutDays = [
 ] as const;
 export type WorkoutDay = (typeof workoutDays)[number];
 export interface DayPlan {
+  selectedAlternatives?: Record<string, string>;
   day: WorkoutDay;
   title: string;
   subtitle: string;
@@ -66,7 +68,17 @@ export interface WeeklyPlan {
   version: 1;
   program?: "recomposition-v1";
   blockWeek?: number;
+  trainingLevel?: TrainingLevel;
   days: Record<WorkoutDay, DayPlan>;
+}
+export const trainingLevels = ["beginner", "intermediate", "advanced"] as const;
+export type TrainingLevel = (typeof trainingLevels)[number];
+export interface TrainingProfile {
+  level: TrainingLevel;
+  configured: boolean;
+  autoAdvance: boolean;
+  startedAt: string | null;
+  promotedAt?: string;
 }
 export const skipReasons = [
   "Holiday",
@@ -97,4 +109,5 @@ export interface AppData {
   history: Record<string, WorkoutHistory>;
   notes: Record<string, string>;
   settings: Settings;
+  training: TrainingProfile;
 }

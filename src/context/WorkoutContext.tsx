@@ -8,10 +8,7 @@ import React, {
 } from "react";
 import { AppState } from "react-native";
 import type { AppData, WeeklyPlan, WorkoutDay } from "../data/exerciseTypes";
-import {
-  currentWeekNumber,
-  generateWeeklyWorkout,
-} from "../services/workoutRotation";
+import { currentWeekNumber } from "../services/workoutRotation";
 import {
   historyKey,
   initialData,
@@ -19,6 +16,7 @@ import {
   type Action,
 } from "../services/state";
 import { loadData, saveData } from "../services/storage";
+import { getPlan } from "../services/trainingProgress";
 
 interface Context {
   data: AppData;
@@ -105,9 +103,24 @@ export function WorkoutProvider({ children }: { children: React.ReactNode }) {
   }, []);
   const week = calendar.week + data.weekOffset;
   useEffect(() => {
-    if (!loading && !loadError) dispatch({ type: "ensureWeek", week });
-  }, [week, loading, loadError, dispatch]);
-  const plan = data.plans[week] ?? generateWeeklyWorkout(week);
+    if (!loading && !loadError) {
+      dispatch({
+        type: "advanceTraining",
+        week,
+        date: new Date().toISOString(),
+      });
+      dispatch({ type: "ensureWeek", week });
+    }
+  }, [
+    week,
+    calendar.day,
+    loading,
+    loadError,
+    data.training.autoAdvance,
+    data.training.configured,
+    dispatch,
+  ]);
+  const plan = getPlan(data, week);
   return (
     <WorkoutContext.Provider
       value={{

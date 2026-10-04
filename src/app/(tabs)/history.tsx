@@ -1,3 +1,4 @@
+import { getPlan } from "../../services/trainingProgress";
 import { FlatList, Pressable, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import Feather from "@expo/vector-icons/Feather";
@@ -6,10 +7,7 @@ import { useWorkout } from "../../context/WorkoutContext";
 import { workoutDays } from "../../data/exerciseTypes";
 
 import { historyKey } from "../../services/state";
-import {
-  generateWeeklyWorkout,
-  weekLabel,
-} from "../../services/workoutRotation";
+import { weekLabel } from "../../services/workoutRotation";
 import { Empty, Label, Panel } from "../../components/ui";
 
 export default function History() {
@@ -69,9 +67,7 @@ export default function History() {
               </Label>
               <View className="mt-3">
                 {workoutDays.map((day) => {
-                  const workout = (
-                    data.plans[targetWeek] ?? generateWeeklyWorkout(targetWeek)
-                  ).days[day];
+                  const workout = getPlan(data, targetWeek).days[day];
                   const entry = data.history[historyKey(targetWeek, day)];
                   const count = entry?.completedExercises.length ?? 0;
                   const total =
