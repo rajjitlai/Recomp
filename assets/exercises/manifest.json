@@ -1,0 +1,942 @@
+[
+  {
+    "id": "chest-barbell-bench-press",
+    "name": "Barbell Bench Press",
+    "path": "assets/exercises/chest/barbell-bench-press.jpg"
+  },
+  {
+    "id": "chest-incline-barbell-bench-press",
+    "name": "Incline Barbell Bench Press",
+    "path": "assets/exercises/chest/incline-barbell-bench-press.jpg"
+  },
+  {
+    "id": "chest-decline-barbell-bench-press",
+    "name": "Decline Barbell Bench Press",
+    "path": "assets/exercises/chest/decline-barbell-bench-press.jpg"
+  },
+  {
+    "id": "chest-flat-dumbbell-press",
+    "name": "Flat Dumbbell Press",
+    "path": "assets/exercises/chest/flat-dumbbell-press.jpg"
+  },
+  {
+    "id": "chest-incline-dumbbell-press",
+    "name": "Incline Dumbbell Press",
+    "path": "assets/exercises/chest/incline-dumbbell-press.jpg"
+  },
+  {
+    "id": "chest-decline-dumbbell-press",
+    "name": "Decline Dumbbell Press",
+    "path": "assets/exercises/chest/decline-dumbbell-press.jpg"
+  },
+  {
+    "id": "chest-dumbbell-fly",
+    "name": "Dumbbell Fly",
+    "path": "assets/exercises/chest/dumbbell-fly.jpg"
+  },
+  {
+    "id": "chest-incline-dumbbell-fly",
+    "name": "Incline Dumbbell Fly",
+    "path": "assets/exercises/chest/incline-dumbbell-fly.jpg"
+  },
+  {
+    "id": "chest-cable-crossover",
+    "name": "Cable Crossover",
+    "path": "assets/exercises/chest/cable-crossover.jpg"
+  },
+  {
+    "id": "chest-high-to-low-cable-fly",
+    "name": "High-to-Low Cable Fly",
+    "path": "assets/exercises/chest/high-to-low-cable-fly.jpg"
+  },
+  {
+    "id": "chest-low-to-high-cable-fly",
+    "name": "Low-to-High Cable Fly",
+    "path": "assets/exercises/chest/low-to-high-cable-fly.jpg"
+  },
+  {
+    "id": "chest-pec-deck",
+    "name": "Pec Deck",
+    "path": "assets/exercises/chest/pec-deck.jpg"
+  },
+  {
+    "id": "chest-machine-chest-press",
+    "name": "Machine Chest Press",
+    "path": "assets/exercises/chest/machine-chest-press.jpg"
+  },
+  {
+    "id": "chest-incline-machine-press",
+    "name": "Incline Machine Press",
+    "path": "assets/exercises/chest/incline-machine-press.jpg"
+  },
+  {
+    "id": "chest-decline-machine-press",
+    "name": "Decline Machine Press",
+    "path": "assets/exercises/chest/decline-machine-press.jpg"
+  },
+  {
+    "id": "chest-push-ups",
+    "name": "Push-Ups",
+    "path": "assets/exercises/chest/push-ups.jpg"
+  },
+  {
+    "id": "chest-wide-grip-push-ups",
+    "name": "Wide-Grip Push-Ups",
+    "path": "assets/exercises/chest/wide-grip-push-ups.jpg"
+  },
+  {
+    "id": "chest-diamond-push-ups",
+    "name": "Diamond Push-Ups",
+    "path": "assets/exercises/chest/diamond-push-ups.jpg"
+  },
+  {
+    "id": "chest-chest-dips",
+    "name": "Chest Dips",
+    "path": "assets/exercises/chest/chest-dips.jpg"
+  },
+  {
+    "id": "chest-dumbbell-pullover",
+    "name": "Dumbbell Pullover",
+    "path": "assets/exercises/chest/dumbbell-pullover.jpg"
+  },
+  {
+    "id": "triceps-triceps-pushdown",
+    "name": "Triceps Pushdown",
+    "path": "assets/exercises/triceps/triceps-pushdown.jpg"
+  },
+  {
+    "id": "triceps-rope-pushdown",
+    "name": "Rope Pushdown",
+    "path": "assets/exercises/triceps/rope-pushdown.jpg"
+  },
+  {
+    "id": "triceps-straight-bar-pushdown",
+    "name": "Straight-Bar Pushdown",
+    "path": "assets/exercises/triceps/straight-bar-pushdown.jpg"
+  },
+  {
+    "id": "triceps-reverse-grip-pushdown",
+    "name": "Reverse-Grip Pushdown",
+    "path": "assets/exercises/triceps/reverse-grip-pushdown.jpg"
+  },
+  {
+    "id": "triceps-overhead-cable-extension",
+    "name": "Overhead Cable Extension",
+    "path": "assets/exercises/triceps/overhead-cable-extension.jpg"
+  },
+  {
+    "id": "triceps-overhead-dumbbell-extension",
+    "name": "Overhead Dumbbell Extension",
+    "path": "assets/exercises/triceps/overhead-dumbbell-extension.jpg"
+  },
+  {
+    "id": "triceps-skull-crushers",
+    "name": "Skull Crushers",
+    "path": "assets/exercises/triceps/skull-crushers.jpg"
+  },
+  {
+    "id": "triceps-ez-bar-skull-crushers",
+    "name": "EZ-Bar Skull Crushers",
+    "path": "assets/exercises/triceps/ez-bar-skull-crushers.jpg"
+  },
+  {
+    "id": "triceps-dumbbell-skull-crushers",
+    "name": "Dumbbell Skull Crushers",
+    "path": "assets/exercises/triceps/dumbbell-skull-crushers.jpg"
+  },
+  {
+    "id": "triceps-close-grip-bench-press",
+    "name": "Close-Grip Bench Press",
+    "path": "assets/exercises/triceps/close-grip-bench-press.jpg"
+  },
+  {
+    "id": "triceps-bench-dips",
+    "name": "Bench Dips",
+    "path": "assets/exercises/triceps/bench-dips.jpg"
+  },
+  {
+    "id": "triceps-triceps-dips",
+    "name": "Triceps Dips",
+    "path": "assets/exercises/triceps/triceps-dips.jpg"
+  },
+  {
+    "id": "triceps-dumbbell-kickbacks",
+    "name": "Dumbbell Kickbacks",
+    "path": "assets/exercises/triceps/dumbbell-kickbacks.jpg"
+  },
+  {
+    "id": "triceps-cable-kickbacks",
+    "name": "Cable Kickbacks",
+    "path": "assets/exercises/triceps/cable-kickbacks.jpg"
+  },
+  {
+    "id": "triceps-single-arm-pushdown",
+    "name": "Single-Arm Pushdown",
+    "path": "assets/exercises/triceps/single-arm-pushdown.jpg"
+  },
+  {
+    "id": "triceps-single-arm-overhead-extension",
+    "name": "Single-Arm Overhead Extension",
+    "path": "assets/exercises/triceps/single-arm-overhead-extension.jpg"
+  },
+  {
+    "id": "triceps-jm-press",
+    "name": "JM Press",
+    "path": "assets/exercises/triceps/jm-press.jpg"
+  },
+  {
+    "id": "back-deadlift",
+    "name": "Deadlift",
+    "path": "assets/exercises/back/deadlift.jpg"
+  },
+  {
+    "id": "back-romanian-deadlift",
+    "name": "Romanian Deadlift",
+    "path": "assets/exercises/back/romanian-deadlift.jpg"
+  },
+  {
+    "id": "back-conventional-deadlift",
+    "name": "Conventional Deadlift",
+    "path": "assets/exercises/back/conventional-deadlift.jpg"
+  },
+  {
+    "id": "back-sumo-deadlift",
+    "name": "Sumo Deadlift",
+    "path": "assets/exercises/back/sumo-deadlift.jpg"
+  },
+  {
+    "id": "back-rack-pull",
+    "name": "Rack Pull",
+    "path": "assets/exercises/back/rack-pull.jpg"
+  },
+  {
+    "id": "back-pull-ups",
+    "name": "Pull-Ups",
+    "path": "assets/exercises/back/pull-ups.jpg"
+  },
+  {
+    "id": "back-chin-ups",
+    "name": "Chin-Ups",
+    "path": "assets/exercises/back/chin-ups.jpg"
+  },
+  {
+    "id": "back-wide-grip-lat-pulldown",
+    "name": "Wide-Grip Lat Pulldown",
+    "path": "assets/exercises/back/wide-grip-lat-pulldown.jpg"
+  },
+  {
+    "id": "back-close-grip-lat-pulldown",
+    "name": "Close-Grip Lat Pulldown",
+    "path": "assets/exercises/back/close-grip-lat-pulldown.jpg"
+  },
+  {
+    "id": "back-reverse-grip-lat-pulldown",
+    "name": "Reverse-Grip Lat Pulldown",
+    "path": "assets/exercises/back/reverse-grip-lat-pulldown.jpg"
+  },
+  {
+    "id": "back-neutral-grip-pulldown",
+    "name": "Neutral-Grip Pulldown",
+    "path": "assets/exercises/back/neutral-grip-pulldown.jpg"
+  },
+  {
+    "id": "back-barbell-row",
+    "name": "Barbell Row",
+    "path": "assets/exercises/back/barbell-row.jpg"
+  },
+  {
+    "id": "back-pendlay-row",
+    "name": "Pendlay Row",
+    "path": "assets/exercises/back/pendlay-row.jpg"
+  },
+  {
+    "id": "back-t-bar-row",
+    "name": "T-Bar Row",
+    "path": "assets/exercises/back/t-bar-row.jpg"
+  },
+  {
+    "id": "back-dumbbell-row",
+    "name": "Dumbbell Row",
+    "path": "assets/exercises/back/dumbbell-row.jpg"
+  },
+  {
+    "id": "back-single-arm-dumbbell-row",
+    "name": "Single-Arm Dumbbell Row",
+    "path": "assets/exercises/back/single-arm-dumbbell-row.jpg"
+  },
+  {
+    "id": "back-chest-supported-row",
+    "name": "Chest-Supported Row",
+    "path": "assets/exercises/back/chest-supported-row.jpg"
+  },
+  {
+    "id": "back-seated-cable-row",
+    "name": "Seated Cable Row",
+    "path": "assets/exercises/back/seated-cable-row.jpg"
+  },
+  {
+    "id": "back-close-grip-cable-row",
+    "name": "Close-Grip Cable Row",
+    "path": "assets/exercises/back/close-grip-cable-row.jpg"
+  },
+  {
+    "id": "back-machine-row",
+    "name": "Machine Row",
+    "path": "assets/exercises/back/machine-row.jpg"
+  },
+  {
+    "id": "back-inverted-row",
+    "name": "Inverted Row",
+    "path": "assets/exercises/back/inverted-row.jpg"
+  },
+  {
+    "id": "back-straight-arm-pulldown",
+    "name": "Straight-Arm Pulldown",
+    "path": "assets/exercises/back/straight-arm-pulldown.jpg"
+  },
+  {
+    "id": "back-dumbbell-pullover",
+    "name": "Dumbbell Pullover",
+    "path": "assets/exercises/back/dumbbell-pullover.jpg"
+  },
+  {
+    "id": "back-face-pull",
+    "name": "Face Pull",
+    "path": "assets/exercises/back/face-pull.jpg"
+  },
+  {
+    "id": "biceps-barbell-curl",
+    "name": "Barbell Curl",
+    "path": "assets/exercises/biceps/barbell-curl.jpg"
+  },
+  {
+    "id": "biceps-ez-bar-curl",
+    "name": "EZ-Bar Curl",
+    "path": "assets/exercises/biceps/ez-bar-curl.jpg"
+  },
+  {
+    "id": "biceps-dumbbell-curl",
+    "name": "Dumbbell Curl",
+    "path": "assets/exercises/biceps/dumbbell-curl.jpg"
+  },
+  {
+    "id": "biceps-alternating-dumbbell-curl",
+    "name": "Alternating Dumbbell Curl",
+    "path": "assets/exercises/biceps/alternating-dumbbell-curl.jpg"
+  },
+  {
+    "id": "biceps-incline-dumbbell-curl",
+    "name": "Incline Dumbbell Curl",
+    "path": "assets/exercises/biceps/incline-dumbbell-curl.jpg"
+  },
+  {
+    "id": "biceps-hammer-curl",
+    "name": "Hammer Curl",
+    "path": "assets/exercises/biceps/hammer-curl.jpg"
+  },
+  {
+    "id": "biceps-cross-body-hammer-curl",
+    "name": "Cross-Body Hammer Curl",
+    "path": "assets/exercises/biceps/cross-body-hammer-curl.jpg"
+  },
+  {
+    "id": "biceps-preacher-curl",
+    "name": "Preacher Curl",
+    "path": "assets/exercises/biceps/preacher-curl.jpg"
+  },
+  {
+    "id": "biceps-preacher-hammer-curl",
+    "name": "Preacher Hammer Curl",
+    "path": "assets/exercises/biceps/preacher-hammer-curl.jpg"
+  },
+  {
+    "id": "biceps-concentration-curl",
+    "name": "Concentration Curl",
+    "path": "assets/exercises/biceps/concentration-curl.jpg"
+  },
+  {
+    "id": "biceps-cable-curl",
+    "name": "Cable Curl",
+    "path": "assets/exercises/biceps/cable-curl.jpg"
+  },
+  {
+    "id": "biceps-rope-cable-curl",
+    "name": "Rope Cable Curl",
+    "path": "assets/exercises/biceps/rope-cable-curl.jpg"
+  },
+  {
+    "id": "biceps-bayesian-curl",
+    "name": "Bayesian Curl",
+    "path": "assets/exercises/biceps/bayesian-curl.jpg"
+  },
+  {
+    "id": "biceps-spider-curl",
+    "name": "Spider Curl",
+    "path": "assets/exercises/biceps/spider-curl.jpg"
+  },
+  {
+    "id": "biceps-reverse-curl",
+    "name": "Reverse Curl",
+    "path": "assets/exercises/biceps/reverse-curl.jpg"
+  },
+  {
+    "id": "biceps-zottman-curl",
+    "name": "Zottman Curl",
+    "path": "assets/exercises/biceps/zottman-curl.jpg"
+  },
+  {
+    "id": "biceps-drag-curl",
+    "name": "Drag Curl",
+    "path": "assets/exercises/biceps/drag-curl.jpg"
+  },
+  {
+    "id": "biceps-machine-biceps-curl",
+    "name": "Machine Biceps Curl",
+    "path": "assets/exercises/biceps/machine-biceps-curl.jpg"
+  },
+  {
+    "id": "biceps-single-arm-cable-curl",
+    "name": "Single-Arm Cable Curl",
+    "path": "assets/exercises/biceps/single-arm-cable-curl.jpg"
+  },
+  {
+    "id": "shoulders-barbell-overhead-press",
+    "name": "Barbell Overhead Press",
+    "path": "assets/exercises/shoulders/barbell-overhead-press.jpg"
+  },
+  {
+    "id": "shoulders-dumbbell-shoulder-press",
+    "name": "Dumbbell Shoulder Press",
+    "path": "assets/exercises/shoulders/dumbbell-shoulder-press.jpg"
+  },
+  {
+    "id": "shoulders-arnold-press",
+    "name": "Arnold Press",
+    "path": "assets/exercises/shoulders/arnold-press.jpg"
+  },
+  {
+    "id": "shoulders-machine-shoulder-press",
+    "name": "Machine Shoulder Press",
+    "path": "assets/exercises/shoulders/machine-shoulder-press.jpg"
+  },
+  {
+    "id": "shoulders-smith-machine-shoulder-press",
+    "name": "Smith Machine Shoulder Press",
+    "path": "assets/exercises/shoulders/smith-machine-shoulder-press.jpg"
+  },
+  {
+    "id": "shoulders-push-press",
+    "name": "Push Press",
+    "path": "assets/exercises/shoulders/push-press.jpg"
+  },
+  {
+    "id": "shoulders-dumbbell-lateral-raise",
+    "name": "Dumbbell Lateral Raise",
+    "path": "assets/exercises/shoulders/dumbbell-lateral-raise.jpg"
+  },
+  {
+    "id": "shoulders-cable-lateral-raise",
+    "name": "Cable Lateral Raise",
+    "path": "assets/exercises/shoulders/cable-lateral-raise.jpg"
+  },
+  {
+    "id": "shoulders-machine-lateral-raise",
+    "name": "Machine Lateral Raise",
+    "path": "assets/exercises/shoulders/machine-lateral-raise.jpg"
+  },
+  {
+    "id": "shoulders-leaning-cable-lateral-raise",
+    "name": "Leaning Cable Lateral Raise",
+    "path": "assets/exercises/shoulders/leaning-cable-lateral-raise.jpg"
+  },
+  {
+    "id": "shoulders-front-dumbbell-raise",
+    "name": "Front Dumbbell Raise",
+    "path": "assets/exercises/shoulders/front-dumbbell-raise.jpg"
+  },
+  {
+    "id": "shoulders-front-plate-raise",
+    "name": "Front Plate Raise",
+    "path": "assets/exercises/shoulders/front-plate-raise.jpg"
+  },
+  {
+    "id": "shoulders-cable-front-raise",
+    "name": "Cable Front Raise",
+    "path": "assets/exercises/shoulders/cable-front-raise.jpg"
+  },
+  {
+    "id": "shoulders-rear-delt-dumbbell-fly",
+    "name": "Rear Delt Dumbbell Fly",
+    "path": "assets/exercises/shoulders/rear-delt-dumbbell-fly.jpg"
+  },
+  {
+    "id": "shoulders-cable-rear-delt-fly",
+    "name": "Cable Rear Delt Fly",
+    "path": "assets/exercises/shoulders/cable-rear-delt-fly.jpg"
+  },
+  {
+    "id": "shoulders-reverse-pec-deck",
+    "name": "Reverse Pec Deck",
+    "path": "assets/exercises/shoulders/reverse-pec-deck.jpg"
+  },
+  {
+    "id": "shoulders-bent-over-rear-delt-raise",
+    "name": "Bent-Over Rear Delt Raise",
+    "path": "assets/exercises/shoulders/bent-over-rear-delt-raise.jpg"
+  },
+  {
+    "id": "shoulders-upright-row",
+    "name": "Upright Row",
+    "path": "assets/exercises/shoulders/upright-row.jpg"
+  },
+  {
+    "id": "shoulders-face-pull",
+    "name": "Face Pull",
+    "path": "assets/exercises/shoulders/face-pull.jpg"
+  },
+  {
+    "id": "traps-barbell-shrugs",
+    "name": "Barbell Shrugs",
+    "path": "assets/exercises/traps/barbell-shrugs.jpg"
+  },
+  {
+    "id": "traps-dumbbell-shrugs",
+    "name": "Dumbbell Shrugs",
+    "path": "assets/exercises/traps/dumbbell-shrugs.jpg"
+  },
+  {
+    "id": "traps-smith-machine-shrugs",
+    "name": "Smith Machine Shrugs",
+    "path": "assets/exercises/traps/smith-machine-shrugs.jpg"
+  },
+  {
+    "id": "traps-cable-shrugs",
+    "name": "Cable Shrugs",
+    "path": "assets/exercises/traps/cable-shrugs.jpg"
+  },
+  {
+    "id": "traps-behind-the-back-shrugs",
+    "name": "Behind-the-Back Shrugs",
+    "path": "assets/exercises/traps/behind-the-back-shrugs.jpg"
+  },
+  {
+    "id": "traps-farmers-walk",
+    "name": "Farmer's Walk",
+    "path": "assets/exercises/traps/farmers-walk.jpg"
+  },
+  {
+    "id": "traps-rack-pull",
+    "name": "Rack Pull",
+    "path": "assets/exercises/traps/rack-pull.jpg"
+  },
+  {
+    "id": "traps-face-pull",
+    "name": "Face Pull",
+    "path": "assets/exercises/traps/face-pull.jpg"
+  },
+  {
+    "id": "quads-barbell-squat",
+    "name": "Barbell Squat",
+    "path": "assets/exercises/legs/barbell-squat.jpg"
+  },
+  {
+    "id": "quads-front-squat",
+    "name": "Front Squat",
+    "path": "assets/exercises/legs/front-squat.jpg"
+  },
+  {
+    "id": "quads-hack-squat",
+    "name": "Hack Squat",
+    "path": "assets/exercises/legs/hack-squat.jpg"
+  },
+  {
+    "id": "quads-leg-press",
+    "name": "Leg Press",
+    "path": "assets/exercises/legs/leg-press.jpg"
+  },
+  {
+    "id": "quads-bulgarian-split-squat",
+    "name": "Bulgarian Split Squat",
+    "path": "assets/exercises/legs/bulgarian-split-squat.jpg"
+  },
+  {
+    "id": "quads-walking-lunges",
+    "name": "Walking Lunges",
+    "path": "assets/exercises/legs/walking-lunges.jpg"
+  },
+  {
+    "id": "quads-reverse-lunges",
+    "name": "Reverse Lunges",
+    "path": "assets/exercises/legs/reverse-lunges.jpg"
+  },
+  {
+    "id": "quads-forward-lunges",
+    "name": "Forward Lunges",
+    "path": "assets/exercises/legs/forward-lunges.jpg"
+  },
+  {
+    "id": "quads-goblet-squat",
+    "name": "Goblet Squat",
+    "path": "assets/exercises/legs/goblet-squat.jpg"
+  },
+  {
+    "id": "quads-sissy-squat",
+    "name": "Sissy Squat",
+    "path": "assets/exercises/legs/sissy-squat.jpg"
+  },
+  {
+    "id": "quads-step-ups",
+    "name": "Step-Ups",
+    "path": "assets/exercises/legs/step-ups.jpg"
+  },
+  {
+    "id": "quads-leg-extension",
+    "name": "Leg Extension",
+    "path": "assets/exercises/legs/leg-extension.jpg"
+  },
+  {
+    "id": "posterior-romanian-deadlift",
+    "name": "Romanian Deadlift",
+    "path": "assets/exercises/legs/romanian-deadlift.jpg"
+  },
+  {
+    "id": "posterior-stiff-leg-deadlift",
+    "name": "Stiff-Leg Deadlift",
+    "path": "assets/exercises/legs/stiff-leg-deadlift.jpg"
+  },
+  {
+    "id": "posterior-good-morning",
+    "name": "Good Morning",
+    "path": "assets/exercises/legs/good-morning.jpg"
+  },
+  {
+    "id": "posterior-lying-leg-curl",
+    "name": "Lying Leg Curl",
+    "path": "assets/exercises/legs/lying-leg-curl.jpg"
+  },
+  {
+    "id": "posterior-seated-leg-curl",
+    "name": "Seated Leg Curl",
+    "path": "assets/exercises/legs/seated-leg-curl.jpg"
+  },
+  {
+    "id": "posterior-standing-leg-curl",
+    "name": "Standing Leg Curl",
+    "path": "assets/exercises/legs/standing-leg-curl.jpg"
+  },
+  {
+    "id": "posterior-nordic-hamstring-curl",
+    "name": "Nordic Hamstring Curl",
+    "path": "assets/exercises/legs/nordic-hamstring-curl.jpg"
+  },
+  {
+    "id": "posterior-hip-thrust",
+    "name": "Hip Thrust",
+    "path": "assets/exercises/legs/hip-thrust.jpg"
+  },
+  {
+    "id": "posterior-barbell-hip-thrust",
+    "name": "Barbell Hip Thrust",
+    "path": "assets/exercises/legs/barbell-hip-thrust.jpg"
+  },
+  {
+    "id": "posterior-glute-bridge",
+    "name": "Glute Bridge",
+    "path": "assets/exercises/legs/glute-bridge.jpg"
+  },
+  {
+    "id": "posterior-cable-pull-through",
+    "name": "Cable Pull-Through",
+    "path": "assets/exercises/legs/cable-pull-through.jpg"
+  },
+  {
+    "id": "posterior-bulgarian-split-squat",
+    "name": "Bulgarian Split Squat",
+    "path": "assets/exercises/legs/bulgarian-split-squat.jpg"
+  },
+  {
+    "id": "posterior-reverse-lunge",
+    "name": "Reverse Lunge",
+    "path": "assets/exercises/legs/reverse-lunge.jpg"
+  },
+  {
+    "id": "calves-standing-calf-raise",
+    "name": "Standing Calf Raise",
+    "path": "assets/exercises/legs/standing-calf-raise.jpg"
+  },
+  {
+    "id": "calves-seated-calf-raise",
+    "name": "Seated Calf Raise",
+    "path": "assets/exercises/legs/seated-calf-raise.jpg"
+  },
+  {
+    "id": "calves-leg-press-calf-raise",
+    "name": "Leg Press Calf Raise",
+    "path": "assets/exercises/legs/leg-press-calf-raise.jpg"
+  },
+  {
+    "id": "calves-smith-machine-calf-raise",
+    "name": "Smith Machine Calf Raise",
+    "path": "assets/exercises/legs/smith-machine-calf-raise.jpg"
+  },
+  {
+    "id": "calves-donkey-calf-raise",
+    "name": "Donkey Calf Raise",
+    "path": "assets/exercises/legs/donkey-calf-raise.jpg"
+  },
+  {
+    "id": "calves-single-leg-calf-raise",
+    "name": "Single-Leg Calf Raise",
+    "path": "assets/exercises/legs/single-leg-calf-raise.jpg"
+  },
+  {
+    "id": "conditioning-burpees",
+    "name": "Burpees",
+    "path": "assets/exercises/cardio/burpees.jpg"
+  },
+  {
+    "id": "conditioning-burpee-broad-jumps",
+    "name": "Burpee Broad Jumps",
+    "path": "assets/exercises/cardio/burpee-broad-jumps.jpg"
+  },
+  {
+    "id": "conditioning-mountain-climbers",
+    "name": "Mountain Climbers",
+    "path": "assets/exercises/cardio/mountain-climbers.jpg"
+  },
+  {
+    "id": "conditioning-high-knees",
+    "name": "High Knees",
+    "path": "assets/exercises/cardio/high-knees.jpg"
+  },
+  {
+    "id": "conditioning-butt-kicks",
+    "name": "Butt Kicks",
+    "path": "assets/exercises/cardio/butt-kicks.jpg"
+  },
+  {
+    "id": "conditioning-jumping-jacks",
+    "name": "Jumping Jacks",
+    "path": "assets/exercises/cardio/jumping-jacks.jpg"
+  },
+  {
+    "id": "conditioning-star-jumps",
+    "name": "Star Jumps",
+    "path": "assets/exercises/cardio/star-jumps.jpg"
+  },
+  {
+    "id": "conditioning-tuck-jumps",
+    "name": "Tuck Jumps",
+    "path": "assets/exercises/cardio/tuck-jumps.jpg"
+  },
+  {
+    "id": "conditioning-squat-jumps",
+    "name": "Squat Jumps",
+    "path": "assets/exercises/cardio/squat-jumps.jpg"
+  },
+  {
+    "id": "conditioning-split-jumps",
+    "name": "Split Jumps",
+    "path": "assets/exercises/cardio/split-jumps.jpg"
+  },
+  {
+    "id": "conditioning-skater-jumps",
+    "name": "Skater Jumps",
+    "path": "assets/exercises/cardio/skater-jumps.jpg"
+  },
+  {
+    "id": "conditioning-broad-jumps",
+    "name": "Broad Jumps",
+    "path": "assets/exercises/cardio/broad-jumps.jpg"
+  },
+  {
+    "id": "conditioning-lateral-jumps",
+    "name": "Lateral Jumps",
+    "path": "assets/exercises/cardio/lateral-jumps.jpg"
+  },
+  {
+    "id": "conditioning-box-jumps",
+    "name": "Box Jumps",
+    "path": "assets/exercises/cardio/box-jumps.jpg"
+  },
+  {
+    "id": "conditioning-jump-rope",
+    "name": "Jump Rope",
+    "path": "assets/exercises/cardio/jump-rope.jpg"
+  },
+  {
+    "id": "conditioning-shadow-boxing",
+    "name": "Shadow Boxing",
+    "path": "assets/exercises/cardio/shadow-boxing.jpg"
+  },
+  {
+    "id": "bodyweight-push-ups",
+    "name": "Push-Ups",
+    "path": "assets/exercises/cardio/push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-wide-push-ups",
+    "name": "Wide Push-Ups",
+    "path": "assets/exercises/cardio/wide-push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-diamond-push-ups",
+    "name": "Diamond Push-Ups",
+    "path": "assets/exercises/cardio/diamond-push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-incline-push-ups",
+    "name": "Incline Push-Ups",
+    "path": "assets/exercises/cardio/incline-push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-decline-push-ups",
+    "name": "Decline Push-Ups",
+    "path": "assets/exercises/cardio/decline-push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-pike-push-ups",
+    "name": "Pike Push-Ups",
+    "path": "assets/exercises/cardio/pike-push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-hindu-push-ups",
+    "name": "Hindu Push-Ups",
+    "path": "assets/exercises/cardio/hindu-push-ups.jpg"
+  },
+  {
+    "id": "bodyweight-bodyweight-squats",
+    "name": "Bodyweight Squats",
+    "path": "assets/exercises/cardio/bodyweight-squats.jpg"
+  },
+  {
+    "id": "bodyweight-jump-squats",
+    "name": "Jump Squats",
+    "path": "assets/exercises/cardio/jump-squats.jpg"
+  },
+  {
+    "id": "bodyweight-lunges",
+    "name": "Lunges",
+    "path": "assets/exercises/cardio/lunges.jpg"
+  },
+  {
+    "id": "bodyweight-reverse-lunges",
+    "name": "Reverse Lunges",
+    "path": "assets/exercises/cardio/reverse-lunges.jpg"
+  },
+  {
+    "id": "bodyweight-walking-lunges",
+    "name": "Walking Lunges",
+    "path": "assets/exercises/cardio/walking-lunges.jpg"
+  },
+  {
+    "id": "bodyweight-bulgarian-split-squats",
+    "name": "Bulgarian Split Squats",
+    "path": "assets/exercises/cardio/bulgarian-split-squats.jpg"
+  },
+  {
+    "id": "bodyweight-step-ups",
+    "name": "Step-Ups",
+    "path": "assets/exercises/cardio/step-ups.jpg"
+  },
+  {
+    "id": "core-plank",
+    "name": "Plank",
+    "path": "assets/exercises/cardio/plank.jpg"
+  },
+  {
+    "id": "core-side-plank",
+    "name": "Side Plank",
+    "path": "assets/exercises/cardio/side-plank.jpg"
+  },
+  {
+    "id": "core-mountain-climbers",
+    "name": "Mountain Climbers",
+    "path": "assets/exercises/cardio/mountain-climbers.jpg"
+  },
+  {
+    "id": "core-bicycle-crunches",
+    "name": "Bicycle Crunches",
+    "path": "assets/exercises/cardio/bicycle-crunches.jpg"
+  },
+  {
+    "id": "core-crunches",
+    "name": "Crunches",
+    "path": "assets/exercises/cardio/crunches.jpg"
+  },
+  {
+    "id": "core-reverse-crunches",
+    "name": "Reverse Crunches",
+    "path": "assets/exercises/cardio/reverse-crunches.jpg"
+  },
+  {
+    "id": "core-sit-ups",
+    "name": "Sit-Ups",
+    "path": "assets/exercises/cardio/sit-ups.jpg"
+  },
+  {
+    "id": "core-leg-raises",
+    "name": "Leg Raises",
+    "path": "assets/exercises/cardio/leg-raises.jpg"
+  },
+  {
+    "id": "core-hanging-leg-raises",
+    "name": "Hanging Leg Raises",
+    "path": "assets/exercises/cardio/hanging-leg-raises.jpg"
+  },
+  {
+    "id": "core-knee-raises",
+    "name": "Knee Raises",
+    "path": "assets/exercises/cardio/knee-raises.jpg"
+  },
+  {
+    "id": "core-flutter-kicks",
+    "name": "Flutter Kicks",
+    "path": "assets/exercises/cardio/flutter-kicks.jpg"
+  },
+  {
+    "id": "core-russian-twists",
+    "name": "Russian Twists",
+    "path": "assets/exercises/cardio/russian-twists.jpg"
+  },
+  {
+    "id": "core-v-ups",
+    "name": "V-Ups",
+    "path": "assets/exercises/cardio/v-ups.jpg"
+  },
+  {
+    "id": "core-toe-touches",
+    "name": "Toe Touches",
+    "path": "assets/exercises/cardio/toe-touches.jpg"
+  },
+  {
+    "id": "core-dead-bug",
+    "name": "Dead Bug",
+    "path": "assets/exercises/cardio/dead-bug.jpg"
+  },
+  {
+    "id": "core-bird-dog",
+    "name": "Bird Dog",
+    "path": "assets/exercises/cardio/bird-dog.jpg"
+  },
+  {
+    "id": "core-heel-taps",
+    "name": "Heel Taps",
+    "path": "assets/exercises/cardio/heel-taps.jpg"
+  },
+  {
+    "id": "core-plank-shoulder-taps",
+    "name": "Plank Shoulder Taps",
+    "path": "assets/exercises/cardio/plank-shoulder-taps.jpg"
+  },
+  {
+    "id": "core-plank-jacks",
+    "name": "Plank Jacks",
+    "path": "assets/exercises/cardio/plank-jacks.jpg"
+  },
+  {
+    "id": "core-hollow-body-hold",
+    "name": "Hollow Body Hold",
+    "path": "assets/exercises/cardio/hollow-body-hold.jpg"
+  }
+]

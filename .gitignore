@@ -1,0 +1,9 @@
+node_modules/
+.expo/
+dist/
+dist-android/
+web-build/
+*.tsbuildinfo
+expo-env.d.ts
+.npm-cache/
+test-results/

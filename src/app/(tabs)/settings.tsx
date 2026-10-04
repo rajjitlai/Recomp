@@ -1,0 +1,261 @@
+import { useState } from "react";
+import { Platform, Pressable, Switch, Text, View } from "react-native";
+import { router } from "expo-router";
+import Feather from "@expo/vector-icons/Feather";
+import { Button, Label, Page, Panel, SectionTitle } from "../../components/ui";
+import {
+  ConfirmDialog,
+  type Confirmation,
+} from "../../components/ConfirmDialog";
+import { useWorkout } from "../../context/WorkoutContext";
+import { todayDay, weekLabel } from "../../services/workoutRotation";
+import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
+import { setReminders } from "../../services/notifications";
+
+function Stepper({
+  label,
+  value,
+  onChange,
+  min,
+  max,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  min: number;
+  max: number;
+}) {
+  return (
+    <View className="flex-row items-center justify-between gap-3 py-3">
+      <Text className="flex-1 text-base text-white">{label}</Text>
+      <View className="flex-row items-center gap-3">
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Decrease ${label}`}
+          disabled={value <= min}
+          onPress={() => onChange(Math.max(min, value - 5))}
+          className="h-12 w-12 items-center justify-center rounded-xl border border-line"
+        >
+          <Feather
+            name="minus"
+            size={18}
+            color={value <= min ? "#505648" : "#d4f77d"}
+          />
+        </Pressable>
+        <Text className="w-12 text-center font-bold text-white">{value}s</Text>
+        <Pressable
+          accessibilityRole="button"
+          accessibilityLabel={`Increase ${label}`}
+          disabled={value >= max}
+          onPress={() => onChange(Math.min(max, value + 5))}
+          className="h-12 w-12 items-center justify-center rounded-xl border border-line"
+        >
+          <Feather
+            name="plus"
+            size={18}
+            color={value >= max ? "#505648" : "#d4f77d"}
+          />
+        </Pressable>
+      </View>
+    </View>
+  );
+}
+export default function Settings() {
+  const { data, week, dispatch } = useWorkout();
+  const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
+  const [resetDay, setResetDay] = useState<WorkoutDay>(todayDay() ?? "monday");
+  const [message, setMessage] = useState("");
+  const [busy, setBusy] = useState(false);
+  const toggleNotifications = async (enabled: boolean) => {
+    setBusy(true);
+    setMessage("");
+    try {
+      await setReminders(enabled);
+      dispatch({ type: "settings", settings: { notifications: enabled } });
+    } catch (error) {
+      setMessage(
+        error instanceof Error ? error.message : "Could not update reminders.",
+      );
+    } finally {
+      setBusy(false);
+    }
+  };
+  return (
+    <Page>
+      <Label>MAKE IT YOURS</Label>
+      <Text className="mb-3 mt-3 text-4xl font-black text-white">
+        Settings.
+      </Text>
+      <Text className="text-base text-muted">Your routine, on your terms.</Text>
+      <SectionTitle title="Circuit timing" caption="Conditioning sessions" />
+      <Panel>
+        <Stepper
+          label="Work"
+          value={data.settings.workSeconds}
+          min={10}
+          max={120}
+          onChange={(workSeconds) =>
+            dispatch({ type: "settings", settings: { workSeconds } })
+          }
+        />
+        <Stepper
+          label="Transition"
+          value={data.settings.restSeconds}
+          min={5}
+          max={120}
+          onChange={(restSeconds) =>
+            dispatch({ type: "settings", settings: { restSeconds } })
+          }
+        />
+        <Stepper
+          label="Between rounds"
+          value={data.settings.roundRestSeconds}
+          min={60}
+          max={120}
+          onChange={(roundRestSeconds) =>
+            dispatch({ type: "settings", settings: { roundRestSeconds } })
+          }
+        />
+      </Panel>
+      <SectionTitle title="Workout reminders" />
+      <Panel>
+        <View className="flex-row items-center gap-4">
+          <View className="flex-1">
+            <Text className="text-base font-bold text-white">
+              A little nudge to show up
+            </Text>
+            <Text className="mt-2 text-sm leading-5 text-muted">
+              {Platform.OS === "web"
+                ? "Available in the Android and iOS app."
+                : "Monday–Saturday at 8:00 AM, device time."}
+            </Text>
+          </View>
+          <Switch
+            accessibilityLabel="Workout reminders"
+            disabled={busy || Platform.OS === "web"}
+            value={data.settings.notifications}
+            onValueChange={(value) => void toggleNotifications(value)}
+            trackColor={{ false: "#454e3c", true: "#879f54" }}
+            thumbColor="#d4f77d"
+          />
+        </View>
+        {message !== "" && (
+          <Text
+            accessibilityRole="alert"
+            className="mt-3 text-sm text-[#efc6a4]"
+          >
+            {message}
+          </Text>
+        )}
+      </Panel>
+      <SectionTitle title="Your program" caption={weekLabel(week)} />
+      <Button
+        label="Muscle + fat-loss guide"
+        secondary
+        icon="target"
+        onPress={() => router.push("/program")}
+      />
+      <View className="gap-3">
+        <Button
+          label="View exercise library"
+          secondary
+          icon="book-open"
+          onPress={() => router.push("/library")}
+        />
+        <Button
+          label="Regenerate current week"
+          secondary
+          icon="refresh-cw"
+          onPress={() =>
+            setConfirmation({
+              title: "Rebuild this week?",
+              message:
+                "The same week produces the same exercises. This refreshes the saved plan and keeps your completion history. Your main lifts stay consistent for a four-week block.",
+              label: "Rebuild plan",
+              action: () => {
+                dispatch({ type: "regenerate", week });
+                setMessage("This week’s plan has been rebuilt.");
+              },
+            })
+          }
+        />
+        <Button
+          label="Start a new week"
+          secondary
+          icon="arrow-right"
+          onPress={() =>
+            setConfirmation({
+              title: "Move to the next week?",
+              message:
+                "Advance your program by one week. Exercises change at the next four-week block; week four uses fewer sets. Your previous progress stays in History. This adds one week to your calendar offset.",
+              label: "Start next week",
+              action: () => dispatch({ type: "newWeek" }),
+            })
+          }
+        />
+      </View>
+      <SectionTitle title="Reset progress" />
+      <Panel>
+        <Text className="mb-4 text-sm leading-5 text-muted">
+          Choose the workout to reset. Other days stay saved.
+        </Text>
+        <View className="mb-4 flex-row flex-wrap gap-2">
+          {workoutDays.map((day) => (
+            <Pressable
+              key={day}
+              accessibilityRole="button"
+              accessibilityState={{ selected: day === resetDay }}
+              onPress={() => setResetDay(day)}
+              className={`min-h-12 items-center justify-center rounded-xl px-3 ${day === resetDay ? "bg-lime" : "bg-ink"}`}
+            >
+              <Text
+                className={`text-xs font-bold uppercase ${day === resetDay ? "text-ink" : "text-muted"}`}
+              >
+                {day.slice(0, 3)}
+              </Text>
+            </Pressable>
+          ))}
+        </View>
+        <Button
+          label="Reset selected workout"
+          secondary
+          icon="rotate-ccw"
+          onPress={() =>
+            setConfirmation({
+              title: `Reset ${resetDay}?`,
+              message:
+                "Clear completion marks for this workout in the current week. Your exercise notes will be kept.",
+              label: "Reset workout",
+              action: () =>
+                dispatch({ type: "resetWorkout", week, day: resetDay }),
+            })
+          }
+        />
+        <View className="mt-3">
+          <Button
+            label="Reset all history"
+            secondary
+            icon="trash-2"
+            onPress={() =>
+              setConfirmation({
+                title: "Delete all workout history?",
+                message:
+                  "This clears every completion mark and past session on this device. It cannot be undone. Your plans, notes, and settings will be kept.",
+                label: "Delete all history",
+                action: () => dispatch({ type: "clearHistory" }),
+              })
+            }
+          />
+        </View>
+      </Panel>
+      <Text className="mt-7 text-center text-xs leading-5 text-muted">
+        FORM / VERSION 1.0{"\n"}Offline by design. Your progress lives on this
+        device.
+      </Text>
+      <ConfirmDialog
+        confirmation={confirmation}
+        close={() => setConfirmation(null)}
+      />
+    </Page>
+  );
+}

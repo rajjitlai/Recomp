@@ -1,0 +1,28 @@
+import { createExercise } from "../exerciseFactory";
+
+export const backExercises = [
+  "Deadlift",
+  "Romanian Deadlift",
+  "Conventional Deadlift",
+  "Sumo Deadlift",
+  "Rack Pull",
+  "Pull-Ups",
+  "Chin-Ups",
+  "Wide-Grip Lat Pulldown",
+  "Close-Grip Lat Pulldown",
+  "Reverse-Grip Lat Pulldown",
+  "Neutral-Grip Pulldown",
+  "Barbell Row",
+  "Pendlay Row",
+  "T-Bar Row",
+  "Dumbbell Row",
+  "Single-Arm Dumbbell Row",
+  "Chest-Supported Row",
+  "Seated Cable Row",
+  "Close-Grip Cable Row",
+  "Machine Row",
+  "Inverted Row",
+  "Straight-Arm Pulldown",
+  "Dumbbell Pullover",
+  "Face Pull",
+].map((name) => createExercise(name, "back"));
