@@ -1,7 +1,18 @@
 import { Platform } from "react-native";
-import * as Notifications from "expo-notifications";
+import { isRunningInExpoGo } from "expo";
+
+export function remindersAvailable(): boolean {
+  return !(Platform.OS === "android" && isRunningInExpoGo());
+}
 
 export async function setReminders(enabled: boolean): Promise<void> {
+  if (!remindersAvailable())
+    throw new Error(
+      "Workout reminders need an Android development build. Expo Go does not support this notification setup.",
+    );
+  // Import lazily: expo-notifications initializes push-token registration on import,
+  // which throws in Android Expo Go even when the app only schedules local reminders.
+  const Notifications = await import("expo-notifications");
   if (!enabled) {
     await Notifications.cancelAllScheduledNotificationsAsync();
     return;

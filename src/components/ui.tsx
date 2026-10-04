@@ -4,6 +4,7 @@ import {
   ScrollView,
   Text,
   View,
+  Image,
   type ViewStyle,
 } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
@@ -89,11 +90,16 @@ export function Page({
               }
               className="min-h-12 flex-row items-center gap-3"
             >
-              <Feather
-                name={back ? "arrow-left" : "activity"}
-                size={26}
-                color="#d4f77d"
-              />
+              {back ? (
+                <Feather name="arrow-left" size={26} color="#d4f77d" />
+              ) : (
+                <Image
+                  source={require("../../assets/logo.png")}
+                  accessibilityIgnoresInvertColors
+                  className="h-7 w-7"
+                  resizeMode="contain"
+                />
+              )}
               <Text className="text-2xl font-black tracking-tight text-white">
                 {back ? (title ?? "Back") : "recomp"}
                 {!back && <Text className="text-lime">.</Text>}

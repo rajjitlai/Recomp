@@ -10,7 +10,7 @@ import {
 import { useWorkout } from "../../context/WorkoutContext";
 import { todayDay, weekLabel } from "../../services/workoutRotation";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
-import { setReminders } from "../../services/notifications";
+import { remindersAvailable, setReminders } from "../../services/notifications";
 
 function Stepper({
   label,
@@ -66,6 +66,7 @@ export default function Settings() {
   const [resetDay, setResetDay] = useState<WorkoutDay>(todayDay() ?? "monday");
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
+  const canUseReminders = remindersAvailable();
   const toggleNotifications = async (enabled: boolean) => {
     setBusy(true);
     setMessage("");
@@ -127,13 +128,15 @@ export default function Settings() {
             <Text className="mt-2 text-sm leading-5 text-muted">
               {Platform.OS === "web"
                 ? "Available in the Android and iOS app."
-                : "Monday–Saturday at 8:00 AM, device time."}
+                : !canUseReminders
+                  ? "Requires an Android development build; unavailable in Expo Go."
+                  : "Monday–Saturday at 8:00 AM, device time."}
             </Text>
           </View>
           <Switch
             accessibilityLabel="Workout reminders"
-            disabled={busy || Platform.OS === "web"}
-            value={data.settings.notifications}
+            disabled={busy || !canUseReminders}
+            value={canUseReminders && data.settings.notifications}
             onValueChange={(value) => void toggleNotifications(value)}
             trackColor={{ false: "#454e3c", true: "#879f54" }}
             thumbColor="#d4f77d"

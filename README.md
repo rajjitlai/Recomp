@@ -4,8 +4,8 @@
 
 [![Version](https://img.shields.io/badge/version-1.0.0-d4f77d?style=flat-square)](./package.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](./LICENSE)
-[![Expo](https://img.shields.io/badge/Expo-SDK%2055-000020?style=flat-square&logo=expo&logoColor=white)](https://docs.expo.dev/versions/v55.0.0/)
-[![React Native](https://img.shields.io/badge/React_Native-0.83-61DAFB?style=flat-square&logo=react&logoColor=white)](https://reactnative.dev/)
+[![Expo](https://img.shields.io/badge/Expo-SDK%2057-000020?style=flat-square&logo=expo&logoColor=white)](https://docs.expo.dev/versions/v57.0.0/)
+[![React Native](https://img.shields.io/badge/React_Native-0.86-61DAFB?style=flat-square&logo=react&logoColor=white)](https://reactnative.dev/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-strict-3178C6?style=flat-square&logo=typescript&logoColor=white)](./tsconfig.json)
 [![NativeWind](https://img.shields.io/badge/NativeWind-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white)](https://www.nativewind.dev/)
 [![Platforms](https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Web-526C36?style=flat-square)](#platform-support)
@@ -62,15 +62,15 @@ Versions below reflect the project configuration, not a recommendation to instal
 
 | Technology             | Version / configuration | Purpose                        |
 | ---------------------- | ----------------------- | ------------------------------ |
-| Expo                   | SDK 55 (`~55.0.31`)     | App tooling and native modules |
-| React Native           | `0.83.10`               | Native UI                      |
+| Expo                   | SDK 57 (`^57.0.26`)     | App tooling and native modules |
+| React Native           | `0.86.3`                | Native UI                      |
 | React                  | `19.2.0`                | Component model                |
-| Expo Router            | `~55.0.18`              | File-based routing             |
+| Expo Router            | `~57.0.24`              | File-based routing             |
 | TypeScript             | `~5.9.2`, strict mode   | Type safety                    |
 | NativeWind             | `^4.2.7`                | Utility-based styling          |
 | Tailwind CSS           | `^3.4.17`               | Styling configuration          |
 | AsyncStorage           | `2.2.0`                 | Local persistence              |
-| Expo Notifications     | `~55.0.27`              | Local workout reminders        |
+| Expo Notifications     | `~57.0.21`              | Local workout reminders        |
 | Node test runner + tsx | See lockfile            | Logic and persistence tests    |
 
 Use [package.json](./package.json) for declared ranges and [package-lock.json](./package-lock.json) for the exact dependency tree.
@@ -83,13 +83,13 @@ Use [package.json](./package.json) for declared ranges and [package-lock.json](.
 | Android  | SDK-compatible Expo Go or a native development build      | Bundle export passed; physical-device checks pending  |
 | iOS      | Compatible simulator client or a native development build | Bundle export passed; simulator/device checks pending |
 
-Local reminders are unavailable on web. Installed native release builds can run offline. The web version has no service worker or offline PWA support and needs its hosting server for initial loading.
+Local reminders are unavailable on web and in Android Expo Go. Android Expo Go cannot load this notification setup because Expo Go removed Android push-notification support; use a native development build or installed app to enable reminders. Local scheduled notifications work in supported native builds and do not require a remote push server. Installed native release builds can run offline. The web version has no service worker or offline PWA support and needs its hosting server for initial loading.
 
 ## Prerequisites
 
 ### All platforms
 
-- **Node.js 24.3+ within the 24.x line** is a suitable development choice; Node 24 was used for this project. Expo SDK 55 also documents support for `^20.19.4`, `^22.13.0`, and `^25.0.0`. See the [SDK 55 release notes](https://expo.dev/changelog/sdk-55).
+- **Node.js 22.13.0 or newer** is required by Expo SDK 57. Node 24 is a suitable development choice. See the [SDK 57 release notes](https://expo.dev/changelog/sdk-57).
 - **npm**, included with Node.js.
 - **Git** to clone the repository.
 - Internet access for the initial dependency installation.
@@ -157,7 +157,7 @@ With a compatible client available, scan the QR code or use the terminal shortcu
 | `i` | Open the iOS Simulator on macOS                 |
 | `w` | Open the web preview                            |
 
-**Expo Go must support SDK 55.** Do not assume the current app-store version matches this project. Check the [Expo Go compatibility guidance](https://docs.expo.dev/troubleshooting/expo-go-version-mismatch/) and [available Expo Go builds](https://expo.dev/go). A native development build is the more reliable route for verifying app-specific native behavior.
+**Expo Go must support SDK 57.** Do not assume the current app-store version matches this project. Check the [Expo Go compatibility guidance](https://docs.expo.dev/troubleshooting/expo-go-version-mismatch/) and [available Expo Go builds](https://expo.dev/go). A native development build is the more reliable route for verifying app-specific native behavior.
 
 ### 5. Optional: create a native development client
 
@@ -383,6 +383,8 @@ Reset and week-control actions use confirmation dialogs. Automatic calendar adva
 
 ## Configuration and app identity
 
+The app icon is configured from `assets/logo.png` for iOS and Android. Android uses it as the adaptive icon foreground over the app's charcoal background. The web app uses the PNG as its favicon. If you replace the image, rebuild the native app to update its installed launcher icon; a Metro refresh alone does not update an already-installed binary.
+
 | Setting                 | Value / location                     |
 | ----------------------- | ------------------------------------ |
 | Display name            | `Recomp — Muscle & Fat Loss`         |
@@ -391,8 +393,8 @@ Reset and week-control actions use confirmation dialogs. Automatic calendar adva
 | Main entry              | `expo-router/entry`                  |
 | Primary deep link       | `recomp://`                          |
 | Legacy deep link        | `formworkout://`                     |
-| Android package         | `com.form.workout`                   |
-| iOS bundle identifier   | `com.form.workout`                   |
+| Android package         | `com.rajjitlaishram.recomp`                   |
+| iOS bundle identifier   | `com.rajjitlaishram.recomp`                   |
 | Storage key             | `form-workout:v1`                    |
 | Web output              | `single` — a single-page application |
 | Environment variables   | None required by application code    |
@@ -484,7 +486,7 @@ Use a configured native build pipeline or follow [Expo EAS Build setup](https://
 | Problem                                                  | What to check                                                                                            |
 | -------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
 | `npm` points to a missing global installation on Windows | Use the direct Node/npm command below, then repair the local npm launcher separately                     |
-| Expo Go says the project is incompatible                 | Use an SDK 55-compatible client or build a native development client                                     |
+| Expo Go says the project is incompatible                 | Update Expo Go and confirm the project uses SDK 57-compatible dependencies, or build a native development client |
 | Android emulator is not found                            | Start an emulator in Android Studio and verify the SDK/platform tools setup                              |
 | iOS launch fails on Windows                              | Use Android/web locally; local iOS compilation requires macOS and Xcode                                  |
 | Phone cannot reach Metro                                 | Check the printed server address, shared network, and local firewall rules; try an emulator or USB setup |
@@ -496,7 +498,7 @@ Use a configured native build pipeline or follow [Expo EAS Build setup](https://
 | A save-error banner appears                              | Keep the app open and retry; check available device/browser storage                                      |
 | Saved-data loading fails                                 | Retry without clearing storage; unsupported/corrupt data is intentionally not overwritten                |
 | Exercise selection did not change after advancing a week | Selection stays stable inside the four-week block by design                                              |
-| Reminder toggle is disabled in the browser               | Reminders are native-only; verify them in an installed mobile build                                      |
+| Reminder toggle is disabled                              | Reminders are unavailable on web and Android Expo Go; verify them in a native development or installed build |
 | Reminder text still says Form                            | Disable and enable reminders again to reschedule their content                                           |
 
 Windows launcher fallback, assuming Node is installed in its default location:
@@ -549,7 +551,7 @@ The `private: true` field in `package.json` prevents accidental npm publication;
 
 ## References
 
-- [Expo SDK 55 release notes](https://expo.dev/changelog/sdk-55)
+- [Expo SDK 57 release notes](https://expo.dev/changelog/sdk-57)
 - [Expo environment setup](https://docs.expo.dev/get-started/set-up-your-environment/)
 - [Expo development builds](https://docs.expo.dev/develop/development-builds/introduction/)
 - [NativeWind installation](https://www.nativewind.dev/docs/getting-started/installation)

@@ -15,14 +15,15 @@ export function ExerciseImage({
   const source = exercise.image ?? exerciseImages[exercise.id];
   return (
     <View
-      className={`items-center justify-center overflow-hidden rounded-2xl bg-[#252b21] ${large ? "h-64 w-full" : "h-16 w-16 sm:h-20 sm:w-20"}`}
+      className={`items-center justify-center overflow-hidden rounded-2xl bg-[#252b21] ${large ? "w-full self-center" : "h-16 w-16 shrink-0 sm:h-20 sm:w-20"}`}
+      style={large ? { maxWidth: 560, aspectRatio: 1.5 } : undefined}
     >
       {source && !failed ? (
         <Image
           source={source}
           accessibilityLabel={exercise.name}
           style={{ width: "100%", height: "100%" }}
-          resizeMode="contain"
+          resizeMode={large ? "contain" : "cover"}
           onError={() => setFailed(true)}
         />
       ) : (
