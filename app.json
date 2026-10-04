@@ -12,7 +12,16 @@
     "icon": "./assets/logo.png",
     "plugins": [
       "expo-router",
-      "expo-notifications"
+      "expo-notifications",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/logo.png",
+          "imageWidth": 160,
+          "resizeMode": "contain",
+          "backgroundColor": "#10120F"
+        }
+      ]
     ],
     "web": {
       "bundler": "metro",

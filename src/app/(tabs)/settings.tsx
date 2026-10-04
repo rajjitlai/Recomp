@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Platform, Pressable, Switch, Text, View } from "react-native";
+import { Linking, Platform, Pressable, Switch, Text, View } from "react-native";
 import { router } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import { Button, Label, Page, Panel, SectionTitle } from "../../components/ui";
@@ -11,6 +11,63 @@ import { useWorkout } from "../../context/WorkoutContext";
 import { todayDay, weekLabel } from "../../services/workoutRotation";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
 import { remindersAvailable, setReminders } from "../../services/notifications";
+
+const authorLinks = [
+  { label: "GitHub", url: "https://github.com/rajjitlai" },
+  { label: "LinkedIn", url: "https://www.linkedin.com/in/rajjitlaishram" },
+  { label: "Instagram", url: "https://www.instagram.com/rajjitlaishram/" },
+  {
+    label: "Facebook",
+    url: "https://www.facebook.com/rajjitlaishram",
+  },
+  { label: "YouTube", url: "https://www.youtube.com/@rjinstitute.rajjit" },
+];
+
+const projectLinks = [
+  {
+    label: "View the source",
+    description: "Explore the Recomp code and releases",
+    icon: "github" as const,
+    url: "https://github.com/rajjitlai/Recomp",
+  },
+  {
+    label: "Report a bug or idea",
+    description: "Share feedback or request an improvement",
+    icon: "message-circle" as const,
+    url: "https://github.com/rajjitlai/Recomp/issues/new",
+  },
+  {
+    label: "Contribute to Recomp",
+    description: "Read the project’s contribution guide",
+    icon: "git-pull-request" as const,
+    url: "https://github.com/rajjitlai/Recomp/blob/main/CONTRIBUTING.md",
+  },
+];
+
+function ExternalAction({
+  label,
+  description,
+  icon,
+  url,
+}: (typeof projectLinks)[number]) {
+  return (
+    <Pressable
+      accessibilityRole="link"
+      accessibilityLabel={`${label}: ${description}`}
+      className="min-h-[68px] flex-row items-center gap-3 rounded-2xl border border-line bg-ink px-3 py-3 active:opacity-75"
+      onPress={() => void Linking.openURL(url)}
+    >
+      <View className="h-10 w-10 items-center justify-center rounded-xl bg-[#252b21]">
+        <Feather name={icon} size={18} color="#d4f77d" />
+      </View>
+      <View className="flex-1">
+        <Text className="text-sm font-bold text-white">{label}</Text>
+        <Text className="mt-1 text-xs leading-4 text-muted">{description}</Text>
+      </View>
+      <Feather name="arrow-up-right" size={17} color="#879f54" />
+    </Pressable>
+  );
+}
 
 function Stepper({
   label,
@@ -90,6 +147,9 @@ export default function Settings() {
       <Text className="text-base text-muted">Your routine, on your terms.</Text>
       <SectionTitle title="Circuit timing" caption="Conditioning sessions" />
       <Panel>
+        <Text className="mb-1 text-sm leading-5 text-muted">
+          Tune work and recovery intervals for your conditioning circuits.
+        </Text>
         <Stepper
           label="Work"
           value={data.settings.workSeconds}
@@ -152,13 +212,13 @@ export default function Settings() {
         )}
       </Panel>
       <SectionTitle title="Your program" caption={weekLabel(week)} />
-      <Button
-        label="Muscle + fat-loss guide"
-        secondary
-        icon="target"
-        onPress={() => router.push("/program")}
-      />
       <View className="gap-3">
+        <Button
+          label="Muscle + fat-loss guide"
+          secondary
+          icon="target"
+          onPress={() => router.push("/program")}
+        />
         <Button
           label="View exercise library"
           secondary
@@ -249,6 +309,72 @@ export default function Settings() {
               })
             }
           />
+        </View>
+      </Panel>
+      <SectionTitle title="About the author" />
+      <Panel>
+        <View className="flex-row items-start justify-between gap-3">
+          <View className="flex-1">
+            <Text className="text-lg font-bold text-white">
+              Rajjit Laishram
+            </Text>
+            <Text className="mt-1 text-sm font-semibold leading-5 text-lime">
+              Drone Software Developer · Autonomous Systems Engineer
+            </Text>
+          </View>
+          <View className="rounded-full border border-line px-3 py-1.5">
+            <Text className="text-[10px] font-bold tracking-wider text-muted">
+              CREATOR
+            </Text>
+          </View>
+        </View>
+        <Text className="mt-3 text-sm leading-5 text-muted">
+          Based in Manipur, Rajjit works as a Project Assistant at NIELIT
+          Imphal’s Drone Electronics Lab. He builds autonomous drone software,
+          ground control systems, and IoT and edge-AI tools that connect
+          intelligent software with real-world hardware.
+        </Text>
+        <Pressable
+          accessibilityRole="link"
+          accessibilityLabel="Visit rajjitlaishram.netlify.app"
+          className="mt-3 min-h-11 flex-row items-center gap-2"
+          onPress={() =>
+            void Linking.openURL("https://rajjitlaishram.netlify.app")
+          }
+        >
+          <Text className="text-sm font-semibold text-lime">
+            rajjitlaishram.netlify.app
+          </Text>
+          <Feather name="external-link" size={14} color="#d4f77d" />
+        </Pressable>
+        <Text className="mb-2 mt-3 text-xs font-bold uppercase tracking-wider text-muted">
+          Connect
+        </Text>
+        <View className="flex-row flex-wrap gap-2">
+          {authorLinks.map(({ label, url }) => (
+            <Pressable
+              key={label}
+              accessibilityRole="link"
+              accessibilityLabel={`Visit Rajjit on ${label}`}
+              className="min-h-11 flex-row items-center gap-2 rounded-xl border border-line bg-ink px-3"
+              onPress={() => void Linking.openURL(url)}
+            >
+              <Text className="text-sm font-semibold text-white">{label}</Text>
+              <Feather name="external-link" size={12} color="#d4f77d" />
+            </Pressable>
+          ))}
+        </View>
+      </Panel>
+      <SectionTitle title="Support & contribute" caption="Open source" />
+      <Panel>
+        <Text className="mb-4 text-sm leading-5 text-muted">
+          Recomp is open source under the MIT License. Found a bug, have an
+          idea, or want to help improve it? Start here.
+        </Text>
+        <View className="gap-2.5">
+          {projectLinks.map((link) => (
+            <ExternalAction key={link.label} {...link} />
+          ))}
         </View>
       </Panel>
       <Text className="mt-7 text-center text-xs leading-5 text-muted">
