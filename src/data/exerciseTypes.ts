@@ -55,6 +55,7 @@ export const workoutDays = [
 ] as const;
 export type WorkoutDay = (typeof workoutDays)[number];
 export interface DayPlan {
+  optional?: boolean;
   selectedAlternatives?: Record<string, string>;
   day: WorkoutDay;
   title: string;
@@ -66,14 +67,27 @@ export interface DayPlan {
 export interface WeeklyPlan {
   weekNumber: number;
   version: 1;
-  program?: "recomposition-v1";
+  program?: ProgramStyle;
+  weekendOrder?: WeekendOrder;
+  aerobicActivity?: AerobicActivity;
   blockWeek?: number;
   trainingLevel?: TrainingLevel;
   days: Record<WorkoutDay, DayPlan>;
 }
 export const trainingLevels = ["beginner", "intermediate", "advanced"] as const;
 export type TrainingLevel = (typeof trainingLevels)[number];
+export const programStyles = [
+  "recomposition-v1",
+  "muscle-split-v1",
+  "general-health-v1",
+] as const;
+export type ProgramStyle = (typeof programStyles)[number];
+export type WeekendOrder = "cardio-first" | "arms-first";
+export type AerobicActivity = "walking" | "cycling";
 export interface TrainingProfile {
+  program?: ProgramStyle;
+  weekendOrder?: WeekendOrder;
+  aerobicActivity?: AerobicActivity;
   level: TrainingLevel;
   configured: boolean;
   autoAdvance: boolean;
@@ -103,6 +117,7 @@ export interface Settings {
   notifications: boolean;
 }
 export interface AppData {
+  journeyCompleted?: boolean;
   version: 1;
   weekOffset: number;
   plans: Record<string, WeeklyPlan>;

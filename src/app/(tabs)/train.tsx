@@ -5,7 +5,7 @@ import { useWorkout } from "../../context/WorkoutContext";
 import { workoutDays } from "../../data/exerciseTypes";
 import { todayDay, weekLabel } from "../../services/workoutRotation";
 import { historyKey } from "../../services/state";
-import { trainingProfiles } from "../../data/trainingLevels";
+import { programSchedule } from "../../data/programStyles";
 export default function Train() {
   const { data, plan, week, completed } = useWorkout();
   return (
@@ -15,7 +15,7 @@ export default function Train() {
         Your training week.
       </Text>
       <Text className="mb-7 text-base text-muted">
-        {trainingProfiles[plan.trainingLevel ?? "intermediate"].schedule}.
+        {programSchedule(plan)}.
       </Text>
       {workoutDays.map((day) => (
         <WorkoutCard

@@ -2,7 +2,7 @@
 
 **Build muscle. Support fat loss. Recover well.**
 
-[![Version](https://img.shields.io/badge/version-1.0.0-d4f77d?style=flat-square)](./package.json)
+[![Version](https://img.shields.io/badge/version-1.0.1-d4f77d?style=flat-square)](./package.json)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green?style=flat-square)](./LICENSE)
 [![Expo](https://img.shields.io/badge/Expo-SDK%2057-000020?style=flat-square&logo=expo&logoColor=white)](https://docs.expo.dev/versions/v57.0.0/)
 [![React Native](https://img.shields.io/badge/React_Native-0.86-61DAFB?style=flat-square&logo=react&logoColor=white)](https://reactnative.dev/)
@@ -14,7 +14,7 @@ Recomp is an MIT-licensed, open-source workout app that combines structured resi
 
 [Getting started](#getting-started) · [Training program](#training-program) · [Local images](#local-exercise-images) · [Development](#development-and-quality-checks) · [Troubleshooting](#troubleshooting)
 
-> **Project status:** Working local app. TypeScript checks, 25 automated tests, Expo Doctor (21/21 checks), and web/Android bundle exports have passed during development. Physical-device verification remains pending. The badges above describe the project; they are not live CI results.
+> **Project status:** Working local app. TypeScript checks, 34 automated tests, Expo Doctor (21/21 checks), and web/Android bundle exports have passed during development. Physical-device verification remains pending. The badges above describe the project; they are not live CI results.
 
 ## Contents
 
@@ -198,7 +198,7 @@ Rebuild the native client after changing native dependencies, config plugins, di
 
 ### Choose a training level
 
-New users choose a starting level on Home or in **Settings → Your training**. Until a choice is saved, the app previews Beginner and automatic advancement stays inactive. Existing installations retain the former program as Intermediate, with progression tracking starting on migration.
+New installations open a four-step **Journey setup** before the main app: choose an experience level, select a workout program, configure progression and program-specific preferences, then review the weekly plan and tap **Start my journey**. The choices save together and apply immediately. Setup can be navigated backward without losing selections; closing the app before finishing restarts setup. Existing installations keep their settings and bypass this flow. After setup, change your level in **Settings → Your training** and your routine in **Settings → Workout programs**. Existing installations retain the former program as Intermediate, with progression tracking starting on migration.
 
 | Level | Weekly style | Normal working sets |
 | --- | --- | --- |
@@ -207,6 +207,24 @@ New users choose a starting level on Home or in **Settings → Your training**. 
 | Advanced | 4 upper/lower lifting days and 2 easy conditioning days | 3–4 sets, 2–3 good reps left |
 
 Beginner plans prioritize machine, dumbbell and bodyweight practice. Their optional recovery days offer a six-movement, two-round circuit, or users may rest or walk instead. Home tracks the three lifting sessions as the weekly target; optional circuits do not count as missed required training.
+
+### Workout programs (1.0.1)
+
+Select **Settings → Workout programs** to keep Muscle & Fat Loss, choose the new Body-part Split, or use General Health. Training level adjusts workload inside your selected routine. Automatic level progression never changes the program. Program/option changes reset level-progression counting and rebuild untouched current/future weeks; started/skipped weeks and past history stay saved.
+
+| Day | Body-part Split | General Health |
+| --- | --- | --- |
+| Monday | 5 chest + 4 triceps (9) | Full body (6) |
+| Tuesday | 5 back + 4 biceps (9) | Optional movement (6) |
+| Wednesday | Legs (6) | Full body (6) |
+| Thursday | 5 shoulders + 1 trap (6) | Optional movement (6) |
+| Friday | Cardio + core (6) | Full body (6) |
+| Saturday | Arms: 3 biceps + 3 triceps (6) | Optional movement (6) |
+| Sunday | Rest | Rest |
+
+Friday/Saturday can be reversed with the Arms-first option. Both new programs include paired exercise alternatives, warm-up guidance, rep ranges, rest intervals, effort targets and four-week consistency. The split uses 1 set per movement for Beginner; Intermediate uses 2 sets on the first two movements and 1 on the rest; Advanced uses 2 sets. Week four reduces sets where possible; one-set movements use lighter loads. General Health uses 1–2 sets and three balanced strength sessions; optional days do not increase its required completion denominator.
+
+Choose walking or cycling for aerobic guidance. Start with manageable 5–10-minute bouts when needed and gradually build toward 150–300 minutes of moderate activity weekly. The app does not log aerobic minutes; completing a short circuit does not establish that the target was met. Guidance follows [WHO activity recommendations](https://www.who.int/europe/news-room/fact-sheets/item/physical-activity) and [ACSM resistance-training guidance](https://acsm.org/resistance-training-guidelines-update-2026/). The high-variety split is a preference option, with some major groups trained only once weekly; General Health and the existing program provide more frequent coverage.
 
 ### Exercise alternatives
 
@@ -419,7 +437,7 @@ The app icon is configured from `assets/logo.png` for iOS and Android. Android u
 | ----------------------- | ------------------------------------ |
 | Display name            | `Recomp — Muscle & Fat Loss`         |
 | Project slug / npm name | `recomp-workout`                     |
-| Version                 | `1.0.0`                              |
+| Version                 | `1.0.1`                              |
 | Main entry              | `expo-router/entry`                  |
 | Primary deep link       | `recomp://`                          |
 | Legacy deep link        | `formworkout://`                     |
@@ -453,7 +471,7 @@ npx expo export --platform all
 
 ### Automated coverage
 
-The current 25-test suite checks:
+The current 34-test suite checks:
 
 - Catalog completeness and unique exercise IDs.
 - Counts, muscle coverage, and deterministic legacy rotation across 200 weeks.

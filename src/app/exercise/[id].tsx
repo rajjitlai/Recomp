@@ -54,7 +54,7 @@ export default function ExerciseDetail() {
   const lighter = validWeek && getPlan(data, week).blockWeek === 4;
   const done = validDay && completed(validDay, week).includes(id);
   const skipped = validDay && data.history[historyKey(week, validDay)]?.skipped;
-  const circuit = (dayPlan?.rounds ?? 1) > 1 || exercise.type !== "strength";
+  const circuit = dayPlan ? dayPlan.rounds > 1 : exercise.type !== "strength";
   return (
     <Page back title="Exercise">
       <ExerciseImage key={id} exercise={exercise} large />

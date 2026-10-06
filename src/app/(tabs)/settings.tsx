@@ -11,6 +11,8 @@ import { useWorkout } from "../../context/WorkoutContext";
 import { todayDay, weekLabel } from "../../services/workoutRotation";
 import { workoutDays, type WorkoutDay } from "../../data/exerciseTypes";
 import { remindersAvailable, setReminders } from "../../services/notifications";
+import { version as appVersion } from "../../../package.json";
+import { ProgramStyleControl } from "../../components/ProgramStyleControl";
 import { TrainingLevelControl } from "../../components/TrainingLevelControl";
 
 const authorLinks = [
@@ -146,6 +148,8 @@ export default function Settings() {
         Settings.
       </Text>
       <Text className="text-base text-muted">Your routine, on your terms.</Text>
+      <SectionTitle title="Workout programs" />
+      <ProgramStyleControl />
       <SectionTitle title="Your training" />
       <TrainingLevelControl />
       <SectionTitle title="Circuit timing" caption="Conditioning sessions" />
@@ -217,7 +221,7 @@ export default function Settings() {
       <SectionTitle title="Your program" caption={weekLabel(week)} />
       <View className="gap-3">
         <Button
-          label="Muscle + fat-loss guide"
+          label="Workout + health guide"
           secondary
           icon="target"
           onPress={() => router.push("/program")}
@@ -381,8 +385,8 @@ export default function Settings() {
         </View>
       </Panel>
       <Text className="mt-7 text-center text-xs leading-5 text-muted">
-        RECOMP / VERSION 1.0{"\n"}Offline by design. Your progress lives on this
-        device.
+        RECOMP / VERSION {appVersion}
+        {"\n"}Offline by design. Your progress lives on this device.
       </Text>
       <ConfirmDialog
         confirmation={confirmation}

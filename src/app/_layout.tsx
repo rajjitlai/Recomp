@@ -4,10 +4,12 @@ import { StatusBar } from "expo-status-bar";
 import { ActivityIndicator, Text, View } from "react-native";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { WorkoutProvider, useWorkout } from "../context/WorkoutContext";
+import { JourneySetup } from "../components/JourneySetup";
 import { Button, Page } from "../components/ui";
 
 function Content() {
-  const { loading, loadError, saveError, retry, retrySave } = useWorkout();
+  const { data, loading, loadError, saveError, retry, retrySave } =
+    useWorkout();
   if (loading)
     return (
       <View className="flex-1 items-center justify-center gap-5 bg-ink">
@@ -30,13 +32,17 @@ function Content() {
           <Button label="Retry save" onPress={retrySave} secondary />
         </View>
       )}
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: { backgroundColor: "#10120f" },
-          animation: "slide_from_right",
-        }}
-      />
+      {data.journeyCompleted === false ? (
+        <JourneySetup />
+      ) : (
+        <Stack
+          screenOptions={{
+            headerShown: false,
+            contentStyle: { backgroundColor: "#10120f" },
+            animation: "slide_from_right",
+          }}
+        />
+      )}
     </View>
   );
 }

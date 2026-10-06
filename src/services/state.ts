@@ -4,11 +4,15 @@ import type {
   Settings,
   SkipReason,
   TrainingLevel,
+  ProgramStyle,
+  WeekendOrder,
+  AerobicActivity,
 } from "../data/exerciseTypes";
 import {
   workoutDays,
   skipReasons,
   trainingLevels,
+  programStyles,
 } from "../data/exerciseTypes";
 import {
   applyTrainingLevel,
@@ -16,15 +20,16 @@ import {
   trainingProgress,
 } from "./trainingProgress";
 import { exerciseById } from "../data/exercises";
+import { generateProgram } from "./programGeneration";
 import { swapExercise } from "./exerciseAlternatives";
 import {
-  generateWeeklyWorkout,
   generateClassicWeeklyWorkout,
   currentWeekNumber,
 } from "./workoutRotation";
 
 export const initialData = (): AppData => ({
   version: 1,
+  journeyCompleted: false,
   weekOffset: 0,
   plans: {},
   history: {},
@@ -44,6 +49,24 @@ export const initialData = (): AppData => ({
 });
 export const historyKey = (week: number, day: WorkoutDay) => `${week}:${day}`;
 export type Action =
+  | {
+      type: "completeJourney";
+      level: TrainingLevel;
+      program: ProgramStyle;
+      weekendOrder: WeekendOrder;
+      aerobicActivity: AerobicActivity;
+      autoAdvance: boolean;
+      week: number;
+      date: string;
+    }
+  | {
+      type: "programStyle";
+      program: ProgramStyle;
+      weekendOrder: WeekendOrder;
+      aerobicActivity: AerobicActivity;
+      week: number;
+      date: string;
+    }
   | { type: "swapExercise"; week: number; day: WorkoutDay; id: string }
   | { type: "trainingLevel"; level: TrainingLevel; week: number; date: string }
   | { type: "trainingAuto"; enabled: boolean }
@@ -66,6 +89,39 @@ export type Action =
   | { type: "note"; id: string; note: string };
 
 export function reduceData(data: AppData, action: Action): AppData {
+  if (action.type === "completeJourney") {
+    if (data.journeyCompleted !== false) return data;
+    const training = {
+      ...data.training,
+      program: action.program,
+      weekendOrder: action.weekendOrder,
+      aerobicActivity: action.aerobicActivity,
+      autoAdvance: action.autoAdvance,
+    };
+    return {
+      ...applyTrainingLevel(
+        { ...data, training },
+        action.level,
+        action.week,
+        action.date,
+      ),
+      journeyCompleted: true,
+    };
+  }
+  if (action.type === "programStyle") {
+    const training = {
+      ...data.training,
+      program: action.program,
+      weekendOrder: action.weekendOrder,
+      aerobicActivity: action.aerobicActivity,
+    };
+    return applyTrainingLevel(
+      { ...data, training },
+      training.level,
+      action.week,
+      action.date,
+    );
+  }
   if (action.type === "swapExercise") {
     const key = historyKey(action.week, action.day);
     const entry = data.history[key];
@@ -271,7 +327,14 @@ export function decodeData(
     if (entry.exercises.some((id) => !exerciseById[id]))
       throw new Error("Unknown saved exercise");
   }
+  if (
+    value.journeyCompleted !== undefined &&
+    typeof value.journeyCompleted !== "boolean"
+  )
+    throw new Error("Invalid saved journey status");
   const data = value as unknown as AppData;
+  // Older installations already have access to the app; only fresh saves need setup.
+  if (data.journeyCompleted === undefined) data.journeyCompleted = true;
   if (value.training === undefined) {
     // Existing users retain the former six-month/intermediate program. Begin
     // progression tracking now rather than promoting from historical workouts.
@@ -298,6 +361,15 @@ export function decodeData(
     )
       throw new Error("Invalid saved training profile");
   }
+  if (
+    (data.training.program !== undefined &&
+      !programStyles.includes(data.training.program)) ||
+    (data.training.weekendOrder !== undefined &&
+      !["cardio-first", "arms-first"].includes(data.training.weekendOrder)) ||
+    (data.training.aerobicActivity !== undefined &&
+      !["walking", "cycling"].includes(data.training.aerobicActivity))
+  )
+    throw new Error("Invalid saved program settings");
   // Preserve already-started legacy weeks. Only untouched current/future weeks
   // move to the new program; historical exercise IDs and completion stay intact.
   data.plans = Object.fromEntries(
@@ -321,21 +393,33 @@ export function decodeData(
           entry.weekNumber === week &&
           (entry.completedExercises.length > 0 || !!entry.skipped),
       );
-      if (saved?.program && saved.program !== "recomposition-v1")
+      if (saved?.program && !programStyles.includes(saved.program))
         throw new Error("Unknown workout program");
+      if (
+        (saved?.weekendOrder !== undefined &&
+          !["cardio-first", "arms-first"].includes(saved.weekendOrder)) ||
+        (saved?.aerobicActivity !== undefined &&
+          !["walking", "cycling"].includes(saved.aerobicActivity))
+      )
+        throw new Error("Invalid saved program options");
       const useNew =
-        saved?.program === "recomposition-v1" ||
+        !!saved?.program ||
         (!started && week >= calendarWeek + data.weekOffset);
       const plan = useNew
-        ? generateWeeklyWorkout(
+        ? generateProgram(
             week,
-            saved?.program === "recomposition-v1"
+            saved?.program
               ? (saved.trainingLevel ?? "intermediate")
               : data.training.level,
+            saved?.program ?? data.training.program,
+            saved?.program ? saved.weekendOrder : data.training.weekendOrder,
+            saved?.program
+              ? saved.aerobicActivity
+              : data.training.aerobicActivity,
           )
         : generateClassicWeeklyWorkout(week);
       // Saved history is authoritative for legacy exercise membership.
-      if (saved?.program === "recomposition-v1")
+      if (saved?.program)
         for (const day of workoutDays) {
           const choices = saved.days?.[day]?.selectedAlternatives;
           if (choices === undefined) continue;

@@ -3,6 +3,7 @@ import { Pressable, Switch, Text, View } from "react-native";
 import Feather from "@expo/vector-icons/Feather";
 import { useWorkout } from "../context/WorkoutContext";
 import { trainingLevels, type TrainingLevel } from "../data/exerciseTypes";
+import { levelDescription, programProfiles } from "../data/programStyles";
 import { trainingProfiles } from "../data/trainingLevels";
 import {
   trainingProgress,
@@ -17,6 +18,11 @@ export function TrainingLevelControl() {
   const [confirmation, setConfirmation] = useState<Confirmation | null>(null);
   useEffect(() => setSelected(data.training.level), [data.training.level]);
   const profile = trainingProfiles[selected];
+  const program = data.training.program ?? "recomposition-v1";
+  const schedule = (level: TrainingLevel) =>
+    program === "recomposition-v1"
+      ? trainingProfiles[level].schedule
+      : programProfiles[program].schedule;
   const progress = trainingProgress(data);
   const pending = !data.training.configured || selected !== data.training.level;
   const preserved = weekHasActivity(data, week);
@@ -45,7 +51,8 @@ export function TrainingLevelControl() {
             key={level}
             accessibilityRole="radio"
             accessibilityState={{ checked: selected === level }}
-            accessibilityLabel={`${trainingProfiles[level].label}. ${trainingProfiles[level].schedule}`}
+            aria-checked={selected === level}
+            accessibilityLabel={`${trainingProfiles[level].label}. ${schedule(level)}`}
             onPress={() => setSelected(level)}
             className={`min-h-14 flex-row items-center gap-3 rounded-2xl border p-3 ${selected === level ? "border-lime bg-[#252f1e]" : "border-line bg-ink"}`}
           >
@@ -59,14 +66,15 @@ export function TrainingLevelControl() {
                 {trainingProfiles[level].label}
               </Text>
               <Text className="mt-1 text-xs leading-5 text-muted">
-                {trainingProfiles[level].schedule}
+                {schedule(level)}
               </Text>
             </View>
           </Pressable>
         ))}
       </View>
       <Text className="my-4 text-sm leading-6 text-muted">
-        {profile.description} Every fourth week uses fewer sets for recovery.
+        {levelDescription(selected, program)} Every fourth week reduces volume
+        where possible; use lighter loads if already doing one set.
       </Text>
       {pending && (
         <Button

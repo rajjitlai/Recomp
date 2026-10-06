@@ -2,6 +2,7 @@ import { Linking, Text, View } from "react-native";
 import { Label, Page, Panel, SectionTitle, Button } from "../components/ui";
 import { useWorkout } from "../context/WorkoutContext";
 import { trainingProfiles } from "../data/trainingLevels";
+import { programProfiles, levelDescription } from "../data/programStyles";
 import { workoutDays } from "../data/exerciseTypes";
 
 export default function Program() {
@@ -9,15 +10,36 @@ export default function Program() {
   const profile = trainingProfiles[plan.trainingLevel ?? "intermediate"];
   return (
     <Page back title="Your plan">
-      <Label accent>FAT LOSS + MUSCLE GAIN</Label>
+      <Label accent>
+        {plan.program === "general-health-v1"
+          ? "STRENGTH + EVERYDAY HEALTH"
+          : "FAT LOSS + MUSCLE GAIN"}
+      </Label>
       <Text className="mt-3 text-4xl font-black text-white">
         {"Build strength.\nKeep it sustainable."}
       </Text>
       <Text className="mt-4 text-base leading-7 text-muted">
-        {profile.label} plan. {profile.description} Progress depends on
-        training, food, and recovery; losing fat and gaining muscle together is
-        possible, but not guaranteed.
+        {programProfiles[plan.program ?? "recomposition-v1"].label} ·{" "}
+        {profile.label}.{" "}
+        {levelDescription(
+          plan.trainingLevel ?? "intermediate",
+          plan.program ?? "recomposition-v1",
+        )}{" "}
+        Progress depends on training, food, and recovery; losing fat and gaining
+        muscle together is possible, but not guaranteed.
       </Text>
+      <Panel>
+        <Text className="text-sm leading-6 text-muted">
+          {programProfiles[plan.program ?? "recomposition-v1"].description} Warm
+          up for 5–10 minutes and practise the first movement with light sets.
+          For one-sided movements, perform the target reps on each side. Finish
+          with a few easy minutes and comfortable mobility. For general health,
+          build toward 150–300 minutes of moderate aerobic activity per week and
+          strengthen all major muscle groups at least twice weekly. If you are
+          returning after a long break, start below the listed workload and
+          build gradually.
+        </Text>
+      </Panel>
       <SectionTitle title="Your weekly rhythm" />
       <Panel>
         <Text className="text-base leading-8 text-white">
@@ -59,9 +81,9 @@ export default function Program() {
       <SectionTitle title="The fat-loss logic" />
       <Panel>
         <Text className="text-base leading-7 text-white">
-          Keep lifting while using a modest, sustainable calorie deficit.
-          Include a protein source at meals. Avoid aggressive cuts that
-          undermine training and recovery.
+          If fat loss is your goal, keep lifting while using a modest,
+          sustainable calorie deficit. Include a protein source at meals. Avoid
+          aggressive cuts that undermine training and recovery.
         </Text>
         <Text className="mt-4 text-base leading-7 text-muted">
           Gradually work toward at least 150 minutes of moderate aerobic

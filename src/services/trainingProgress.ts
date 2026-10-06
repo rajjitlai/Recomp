@@ -1,9 +1,17 @@
 import type { AppData, TrainingLevel } from "../data/exerciseTypes";
 import { trainingProfiles } from "../data/trainingLevels";
-import { currentWeekNumber, generateWeeklyWorkout } from "./workoutRotation";
+import { currentWeekNumber } from "./workoutRotation";
+import { generateProgram } from "./programGeneration";
 
 export const getPlan = (data: AppData, week: number) =>
-  data.plans[week] ?? generateWeeklyWorkout(week, data.training.level);
+  data.plans[week] ??
+  generateProgram(
+    week,
+    data.training.level,
+    data.training.program,
+    data.training.weekendOrder,
+    data.training.aerobicActivity,
+  );
 
 export const weekHasActivity = (data: AppData, week: number) =>
   Object.values(data.history).some(
@@ -35,6 +43,7 @@ export function trainingProgress(data: AppData, now = new Date()) {
         !workout ||
         workout.rounds !== 1 ||
         !plan?.program ||
+        plan.program !== (data.training.program ?? "recomposition-v1") ||
         (plan.trainingLevel ?? "intermediate") !== data.training.level ||
         workout.exercises.length === 0 ||
         entry.exercises.length !== workout.exercises.length ||
@@ -85,7 +94,13 @@ export function applyTrainingLevel(
   for (const key of new Set([...Object.keys(data.plans), String(activeWeek)])) {
     const week = Number(key);
     if (week >= activeWeek && !weekHasActivity(data, week))
-      next.plans[week] = generateWeeklyWorkout(week, level);
+      next.plans[week] = generateProgram(
+        week,
+        level,
+        data.training.program,
+        data.training.weekendOrder,
+        data.training.aerobicActivity,
+      );
   }
   return next;
 }

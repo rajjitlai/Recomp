@@ -10,14 +10,18 @@ import { ProgressBar } from "../../components/ProgressBar";
 import { TrainingLevelControl } from "../../components/TrainingLevelControl";
 import { trainingProfiles } from "../../data/trainingLevels";
 
+import { programProfiles, programSchedule } from "../../data/programStyles";
 import { historyKey } from "../../services/state";
 export default function Home() {
   const { data, plan, week, completed } = useWorkout();
   const wide = useWindowDimensions().width >= 850;
   const today = todayDay();
   const workout = plan.days[today ?? "monday"];
+  const strengthOnly =
+    plan.program === "general-health-v1" ||
+    (plan.program === "recomposition-v1" && plan.trainingLevel === "beginner");
   const trackedDays = workoutDays.filter(
-    (day) => plan.trainingLevel !== "beginner" || plan.days[day].rounds === 1,
+    (day) => !strengthOnly || plan.days[day].rounds === 1,
   );
   const completeDays = trackedDays.filter(
     (day) =>
@@ -49,7 +53,7 @@ export default function Home() {
           <TrainingLevelControl />
         ) : (
           <Button
-            label={`${trainingProfiles[plan.trainingLevel ?? "intermediate"].label} plan · Change level`}
+            label={`${programProfiles[plan.program ?? "recomposition-v1"].label} · ${trainingProfiles[plan.trainingLevel ?? "intermediate"].label} · Settings`}
             secondary
             icon="sliders"
             onPress={() => router.push("/settings")}
@@ -135,7 +139,7 @@ export default function Home() {
           </View>
           <View className="mt-5">
             <Button
-              label="Your muscle + fat-loss plan"
+              label="Your workout + health guide"
               secondary
               icon="target"
               onPress={() => router.push("/program")}
@@ -153,7 +157,7 @@ export default function Home() {
                   </Text>
                 </Text>
                 <Text className="mt-1 text-sm text-muted">
-                  {plan.trainingLevel === "beginner"
+                  {strengthOnly
                     ? "Lifting sessions completed"
                     : "Sessions completed"}
                 </Text>
@@ -173,16 +177,14 @@ export default function Home() {
                 0,
               )}{" "}
               exercises completed this week
-              {plan.trainingLevel === "beginner"
-                ? " · optional recovery circuits are extra"
-                : ""}
+              {strengthOnly ? " · optional recovery circuits are extra" : ""}
             </Text>
           </Panel>
           <View className="mt-5 flex-row items-start gap-3 px-1">
             <Feather name="refresh-cw" size={17} color="#a3aa9c" />
             <Text className="flex-1 text-sm leading-5 text-muted">
               {plan.program
-                ? `${trainingProfiles[plan.trainingLevel ?? "intermediate"].schedule}. Week ${plan.blockWeek} of 4${plan.blockWeek === 4 ? " — lighter volume for recovery" : " — build quality reps before adding weight"}.`
+                ? `${programSchedule(plan)}. Week ${plan.blockWeek} of 4${plan.blockWeek === 4 ? " — lighter volume for recovery" : " — build quality reps before adding weight"}.`
                 : "Your started week stays unchanged. The new muscle + fat-loss program begins next week."}
             </Text>
           </View>

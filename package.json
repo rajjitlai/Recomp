@@ -1,6 +1,6 @@
 {
   "name": "recomp-workout",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "main": "expo-router/entry",
   "scripts": {
@@ -47,5 +47,8 @@
     "decode-uri-component": "^0.5.0",
     "uuid": "^11.1.1"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "allowScripts": {
+    "esbuild@0.28.2": true
+  }
 }
